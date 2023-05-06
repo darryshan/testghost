@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en" data-color-scheme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>How to Increase Contrast for Accessibility – The UI Lab</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="theme-color" content="#D2324F">
+
+
+    <link rel="preload" href="../assets/dist/app.min%EF%B9%96v=ac8ff0cc47.js" as="script">
+    <link rel="preload" href="../assets/dist/app.min%EF%B9%96v=ac8ff0cc47.css" as="style">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+
+    <link rel="preload stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&amp;display=swap" 
+          as="style" onload="this.onload=null;this.rel='stylesheet'" crossorigin>
+    <style>body { --font-body: 'Figtree', sans-serif; --font-headings: 'Figtree', sans-serif; }</style>
+
+
+
+
+
+
+
+    <script async defer src="../assets/dist/app.min%EF%B9%96v=ac8ff0cc47.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../assets/dist/app.min%EF%B9%96v=ac8ff0cc47.css">
+
+    <style>:root {
+    --global-max-width: 1320px; /* site max width */
+    --global-content-width: 680px; /* post-content-width */
+    --global-wide-width: 960px; /* site max width */
+    --global-post-hero-content-max-width: 768px;
+    --global-radius: 5px; /* default radius */
+    --global-gallery-gap: 1em; /* Image gallery distance between images */
+    --global-hyphens: none; /* none/auto */
+    --global-header-height: 72px;
+    --global-theme-notifications: visible; /* visible/hidden */
+    --global-progress-bar: visible; /* visible/hidden */
+    --global-content-preview-fading: 0%; /* 50%-100% for fading effect */
+    --global-hero-img-filter: ;
+    --global-scroll-behavior: auto;
+  }
+</style>
+
+<script>
+  let preferredTheme = localStorage.getItem('PREFERRED_COLOR_SCHEME') || `light`;
+  document.documentElement.setAttribute('data-color-scheme', preferredTheme);
+  
+  // Global values needed
+  const themeGlobal = {
+    currentPage: parseInt(''),
+    nextPage: parseInt(''),
+    nextPageLink: '',
+    maxPages: parseInt(''), 
+    lastPage: `` === `` ? true : false,
+    postsPerPage: parseInt('24'),
+    scrollPos: 0,
+    imageLightbox: `true` === `true` ? true : false
+  }
+
+  // Calculate contrast & HSL value;
+  function getBrandColorInfo(hexcolor) {
+    // get contrast
+    if (hexcolor.slice(0, 1) === '#') { hexcolor = hexcolor.slice(1); }
+    if (hexcolor.length === 3) { hexcolor = hexcolor.split('').map(function (hex) { return hex + hex;}).join(''); }
+    let r = parseInt(hexcolor.substr(0,2),16), g = parseInt(hexcolor.substr(2,2),16), b = parseInt(hexcolor.substr(4,2),16);
+    let yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    const colorContrast = (yiq >= 128) ? '#000' : '#fff';
+
+    //get HSL
+    r /= 255, g /= 255, b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min)  /  2;  
+    if ( max == min ) { h = s = 0; } else {
+      let d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch(max){
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h /= 6;
+    }
+    const colorHSL = [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
+
+    // return
+    return { colorContrast, colorHSL }
+  };
+
+  const brandColor = getBrandColorInfo("#D2324F");
+  let style = document.createElement('style');
+  style.innerHTML = `:root { 
+    --color-brand-contrast: ${brandColor.colorContrast}; 
+    --color-brand-h: ${brandColor.colorHSL[0]};
+    --color-brand-s: ${brandColor.colorHSL[1]}%;
+    --color-brand-l: ${brandColor.colorHSL[2]}%;
+    --color-brand-hsl: ${brandColor.colorHSL[0]} ${brandColor.colorHSL[1]}% ${brandColor.colorHSL[2]}%;
+  }`
+  document.getElementsByTagName('head')[0].appendChild(style);
+</script>
+
+    
+    
+     
+
+    <meta name="description" content="Boost the contrast of your UI designs and meet WCAG accessibility guidelines while feeling on-brand with this easy-to-follow tutorial." />
+    <link rel="icon" href="../content/images/size/w256h256/2023/03/uilab-1.png" type="image/png" />
+    <link rel="canonical" href="https://www.theuiliab.co/increase-contrast-for-accessibility" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="The UI Lab" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="How to Increase Contrast for Accessibility – The UI Lab" />
+    <meta property="og:description" content="Simple tips and tricks to creating higher contrast within your brand color palette." />
+    <meta property="og:url" content="https://www.theuiliab.co/increase-contrast-for-accessibility" />
+    <meta property="og:image" content="https://www.theuilab.co/content/images/2022/11/Contrast-3.png" />
+    <meta property="article:published_time" content="2022-10-26T21:06:43.000Z" />
+    <meta property="article:modified_time" content="2022-11-15T02:44:58.000Z" />
+    <meta property="article:tag" content="Accessibility" />
+    <meta property="article:tag" content="Color" />
+    <meta property="article:tag" content="Figma" />
+    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="How to Increase Contrast for Accessibility – The UI Lab" />
+    <meta name="twitter:description" content="Simple tips and tricks to creating higher contrast within your brand color palette." />
+    <meta name="twitter:url" content="https://www.theuiliab.co/increase-contrast-for-accessibility" />
+    <meta name="twitter:image" content="https://www.theuilab.co/content/images/2022/11/Contrast-3.png" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Gareth" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Accessibility, Color, Figma" />
+    <meta property="og:image:width" content="1600" />
+    <meta property="og:image:height" content="1200" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "The UI Lab",
+        "url": "https://www.theuilab.co/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.theuilab.co/content/images/2023/03/uilab-logo.svg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Gareth",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://www.theuilab.co/content/images/2022/11/1585779806641.jpeg",
+            "width": 800,
+            "height": 800
+        },
+        "url": "../author/gareth/index.html",
+        "sameAs": []
+    },
+    "headline": "How to Increase Contrast for Accessibility – The UI Lab",
+    "url": "https://www.theuilab.co/make-elements-more-readable/",
+    "datePublished": "2022-10-26T21:06:43.000Z",
+    "dateModified": "2022-11-15T02:44:58.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://www.theuilab.co/content/images/2022/11/Contrast-3.png",
+        "width": 1600,
+        "height": 1200
+    },
+    "keywords": "Accessibility, Color, Figma",
+    "description": "Simple tips and tricks to creating higher contrast within your brand color palette.",
+    "mainEntityOfPage": "https://www.theuilab.co/make-elements-more-readable/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.46" />
+    <link rel="alternate" type="application/rss+xml" title="The UI Lab" href="../rss/index.rss" />
+    <script defer src="https://cdn.jsdelivr.net/ghost/portal@~2.29/umd/portal.min.js" data-i18n="false" data-ghost="https://www.theuilab.co/" data-key="dd1aa13c5fa2a25d25457e722a" data-api="https://gareth.ghost.io/ghost/api/content/" crossorigin="anonymous"></script><style id="gh-members-styles">.gh-post-upgrade-cta-content,
+.gh-post-upgrade-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+    width: 100%;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.gh-post-upgrade-cta-content {
+    border-radius: 8px;
+    padding: 40px 4vw;
+}
+
+.gh-post-upgrade-cta h2 {
+    color: #ffffff;
+    font-size: 28px;
+    letter-spacing: -0.2px;
+    margin: 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta p {
+    margin: 20px 0 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta small {
+    font-size: 16px;
+    letter-spacing: -0.2px;
+}
+
+.gh-post-upgrade-cta a {
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a:hover {
+    color: #ffffff;
+    opacity: 0.8;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a.gh-btn {
+    display: block;
+    background: #ffffff;
+    text-decoration: none;
+    margin: 28px 0 0;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.gh-post-upgrade-cta a.gh-btn:hover {
+    opacity: 0.92;
+}</style><script async src="https://js.stripe.com/v3/"></script>
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="dd1aa13c5fa2a25d25457e722a" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://gareth.ghost.io/" crossorigin="anonymous"></script>
+    
+    <link href="https://www.theuilab.co/webmentions/receive/" rel="webmention" />
+    <script defer src="../public/cards.min%EF%B9%96v=ac8ff0cc47.js"></script>
+    <link rel="stylesheet" type="text/css" href="../public/cards.min%EF%B9%96v=ac8ff0cc47.css">
+    <script defer src="../public/member-attribution.min%EF%B9%96v=ac8ff0cc47.js"></script>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVC3N5X7W3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YVC3N5X7W3');
+</script>
+
+<style>.site-head-logo{
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    }
+</style>
+
+<style>.header__brand img{
+    height:40px;
+    }
+</style>
+
+<meta name="theme-color" content="#1A1F22">
+
+
+<!-- Hotjar Tracking Code for https://www.theuilab.co -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:3247598,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+
+<style>.welcome {
+        min-height:360px;
+        background-color: transparent;
+    }
+    
+    .has-bg{
+        background-color: transparent;
+    }
+   
+    
+    .welcome__title{
+        font-size:3rem;
+    }
+    
+:root {
+
+ --global-radius: 0px;
+    }
+    
+    .kg-button-card a.kg-btn {
+            border-radius: 1px;
+    }
+    
+    .btn--gradient:before {
+ background: linear-gradient(135deg,rgba(210,50,79,1),rgba(210,50,79,1));
+    }
+</style>
+
+<style>:root {--ghost-accent-color: #D2324F;}</style>
+  </head>
+  <body class="post-template tag-accessibility tag-color tag-figma" data-hero-image="">
+    <div class="progress-bar"></div>
+    
+      <header class="header js-header" data-header="normal">
+  <div class="container wrapper flex is-rel header__inner">
+<a class="header__brand" href="../index.html">        <picture class="">
+  <source 
+    srcset="../content/images/size/w300/format/webp/2023/03/uilab-logo.svg.webp 300w,"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="header__logo"
+    data-srcset="../content/images/2023/03/uilab-logo.svg 300w,"
+    srcset="../content/images/2023/03/uilab-logo.svg"
+    data-sizes="auto"
+    data-src="../content/images/2023/03/uilab-logo.svg"
+    src="../content/images/2023/03/uilab-logo.svg"
+    alt="The UI Lab"
+    loading="eager"
+  >
+</picture></a>
+    <nav class="header__menu items-center">
+      <ul class="nav">
+    <li class="nav-home" 
+      data-label="Home" data-length="4">
+      <a href="../index.html">
+        <span>Home</span>
+      </a>
+    </li>
+    <li class="nav-about" 
+      data-label="About" data-length="5">
+      <a href="../about/index.html">
+        <span>About</span>
+      </a>
+    </li>
+</ul>
+
+        <div class="header__menu--sub items-center">
+          <button class="header__menu--more is-mainitem" aria-label="Menu"><i class="icon icon-dots">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-dots" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <circle cx="5" cy="12" r="1"></circle>
+  <circle cx="12" cy="12" r="1"></circle>
+  <circle cx="19" cy="12" r="1"></circle>
+</svg>
+</i></button>
+          <ul class="nav secondary submenu">
+    <li class="nav-privacy" 
+      data-label="Privacy" data-length="7">
+      <a href="../privacy/index.html">
+        <span>Privacy</span>
+      </a>
+    </li>
+    <li class="nav-terms" 
+      data-label="Terms" data-length="5">
+      <a href="../terms/index.html">
+        <span>Terms</span>
+      </a>
+    </li>
+    <li class="nav-contact" 
+      data-label="Contact" data-length="7">
+      <a href="../contact/index.html">
+        <span>Contact</span>
+      </a>
+    </li>
+    <li class="nav-natural-ui-wip" 
+      data-label="Natural UI (WIP)" data-length="16">
+      <a href="../laws-of-natural-ui/index.html">
+        <span>Natural UI (WIP)</span>
+      </a>
+    </li>
+</ul>
+        </div>
+    </nav>
+
+    <span class="header--spacer"></span>
+
+    <button class="btn-toggle header-search__toggle" data-ghost-search title="Search" aria-label="Search">
+      <i class="icon icon-search">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+</i>    </button>
+
+        <a href="../signup/index.html" class="btn signup-link btn--brand radius" data-portal="signup">Subscribe</a>
+      
+
+    <div class="member-menu js-member-menu">
+      <a href="../signup/index.html" data-portal="signup" class="signup-link">
+        <i class="icon icon-arrow-up-right icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-up-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <line x1="17" y1="7" x2="7" y2="17" />
+  <polyline points="8 7 17 7 17 16" />
+</svg>
+
+
+
+</i>Sign up
+      </a>
+
+      <a href="../signin/index.html" data-portal="signin" class="signin-link">
+        <i class="icon icon-login icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-in">
+  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+  <polyline points="10 17 15 12 10 7"></polyline>
+  <line x1="15" y1="12" x2="3" y2="12"></line>
+</svg>
+</i>Sign in
+      </a>
+</div>
+    <button class="btn-toggle menu__toggle js-menu-open"
+      type="button" title="Menu" aria-label="Menu">
+        <span></span>
+        <span></span>
+    </button>
+  </div>
+</header>
+
+
+      <div class="menu js-menu">
+  <div class="menu__header flex content-end">
+    <button class="btn-toggle menu__toggle is-active js-menu-close"
+      type="button" title="Menu" aria-label="Menu">
+        <span></span>
+        <span></span>
+    </button>
+  </div>
+
+  <nav class="menu__navigation">
+    <ul class="nav">
+    <li class="nav-home" 
+      data-label="Home" data-length="4">
+      <a href="../index.html">
+        <span>Home</span>
+      </a>
+    </li>
+    <li class="nav-about" 
+      data-label="About" data-length="5">
+      <a href="../about/index.html">
+        <span>About</span>
+      </a>
+    </li>
+</ul>
+
+      <ul class="nav secondary submenu">
+    <li class="nav-privacy" 
+      data-label="Privacy" data-length="7">
+      <a href="../privacy/index.html">
+        <span>Privacy</span>
+      </a>
+    </li>
+    <li class="nav-terms" 
+      data-label="Terms" data-length="5">
+      <a href="../terms/index.html">
+        <span>Terms</span>
+      </a>
+    </li>
+    <li class="nav-contact" 
+      data-label="Contact" data-length="7">
+      <a href="../contact/index.html">
+        <span>Contact</span>
+      </a>
+    </li>
+    <li class="nav-natural-ui-wip" 
+      data-label="Natural UI (WIP)" data-length="16">
+      <a href="../laws-of-natural-ui/index.html">
+        <span>Natural UI (WIP)</span>
+      </a>
+    </li>
+</ul>
+  </nav>
+
+  <div class="menu__actions flex w-100">
+        <a href="../signin/index.html" data-portal="signin" class="btn signin-link btn--bordered radius m-r">
+          Log in
+        </a>
+        <a href="../signup/index.html" data-portal="signup" class="btn signup-link btn--brand radius">
+          Subscribe
+        </a>
+  </div>
+</div>
+    <main class="main">
+      
+
+  <div class="container wrapper">
+  
+    <div class="post-hero is-post" 
+  data-feature-image="true" data-image-style="resource">
+  
+  <div class="post-hero__content flex flex-col">
+    <h1 class="post-hero__title">How to Increase Contrast for Accessibility While Staying On-Brand</h1>
+   
+      <div class="post-hero__excerpt text-acc">Simple tips and tricks to creating higher contrast within your brand color palette.</div>
+
+      <div class="post-info text-acc m-t"> 
+  <ul class="post-info__avatars">
+      <li class="author-avatar has-image">
+        <a href="../author/gareth/index.html" title="Gareth" aria-label="Gareth">
+            <picture class="">
+  <source 
+    data-srcset="../content/images/size/w30/format/webp/2022/11/1585779806641.jpeg.webp 30w,../content/images/size/w100/format/webp/2022/11/1585779806641.jpeg.webp 100w,"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="lazyload"
+    data-srcset="../content/images/size/w30/2022/11/1585779806641.jpeg 30w,../content/images/size/w100/2022/11/1585779806641.jpeg 100w,"
+    srcset="../content/images/size/w30/2022/11/1585779806641.jpeg"
+    data-sizes="auto"
+    data-src="../content/images/size/w100/2022/11/1585779806641.jpeg"
+    src="../content/images/size/w30/2022/11/1585779806641.jpeg"
+    alt="Gareth"
+    
+  >
+</picture>        </a>
+      </li>
+  </ul>
+  <div class="post-info__detail">
+    <span class="post-info__author"><a href="../author/gareth/index.html">Gareth</a></span>
+    <div class="post-info__dr">
+      <time datetime="2022-10-26">Oct 26, 2022</time> 
+      <span class="post-info__readtime">2 min read</span>
+    </div>
+  </div>
+</div>  </div>
+
+    <div class="post-hero__media">
+      <figure class="post-hero__figure">
+        <picture class="">
+  <source 
+    data-srcset="../content/images/size/w300/format/webp/2022/11/Contrast-3.png.webp 300w,../content/images/size/w600/format/webp/2022/11/Contrast-3.png.webp 600w,../content/images/size/w1000/format/webp/2022/11/Contrast-3.png.webp 1000w,../content/images/size/w2000/format/webp/2022/11/Contrast-3.png.webp 2000w"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="lazyload post-hero__img"
+    data-srcset="../content/images/size/w300/2022/11/Contrast-3.png 300w,../content/images/size/w600/2022/11/Contrast-3.png 600w,../content/images/size/w1000/2022/11/Contrast-3.png 1000w,../content/images/size/w2000/2022/11/Contrast-3.png 2000w"
+    srcset="../content/images/size/w30/2022/11/Contrast-3.png"
+    data-sizes="auto"
+    data-src="../content/images/size/w100/2022/11/Contrast-3.png"
+    src="../content/images/size/w30/2022/11/Contrast-3.png"
+    alt="How to Increase Contrast for Accessibility While Staying On-Brand"
+    
+  >
+</picture>        
+      </figure>
+    </div>
+
+</div>
+
+    <article class="post tag-accessibility tag-color tag-figma content post-access-public">
+      <h2></h2><p>This is my fiancé's website, <a href="https://www.thegiggal.com/?ref=theuilab.co">The Gig Gal</a>. It has sort of a strawberry lemonade color scheme. The primary brand color is a salmon pink, and she typically applies it as accent colors throughout the website:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/thegiggal.com.png" class="kg-image" alt loading="lazy" width="2000" height="1571" srcset="../content/images/size/w600/2022/10/thegiggal.com.png 600w, ../content/images/size/w1000/2022/10/thegiggal.com.png 1000w, ../content/images/size/w1600/2022/10/thegiggal.com.png 1600w, ../content/images/2022/10/thegiggal.com.png 2342w" sizes="(min-width: 720px) 720px"></figure><p>The salmon color works well in larger area. However, when you use the brand color for links at small to normal sizes, the contrast is much too low:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/low-contrast-color.png" class="kg-image" alt loading="lazy" width="829" height="360" srcset="../content/images/size/w600/2022/10/low-contrast-color.png 600w, ../content/images/2022/10/low-contrast-color.png 829w" sizes="(min-width: 720px) 720px"></figure><p>Even though the two are literally the same color, when used in a small format, the brand color will look lighter and results in link text that is difficult to read.</p><p>If we run it through a WCAG-compliant contrast checker, we can see that it fails all accessibility standards for normal text:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/Screen-Shot-2022-10-26-at-12.41.33-PM.png" class="kg-image" alt loading="lazy" width="1446" height="868" srcset="../content/images/size/w600/2022/10/Screen-Shot-2022-10-26-at-12.41.33-PM.png 600w, ../content/images/size/w1000/2022/10/Screen-Shot-2022-10-26-at-12.41.33-PM.png 1000w, ../content/images/2022/10/Screen-Shot-2022-10-26-at-12.41.33-PM.png 1446w" sizes="(min-width: 720px) 720px"></figure><p>Not so good! We need to up that contrast, but we need it to still feel like the Gig Gal branding.</p><p><strong>So, we can increase the contrast and make links more readable by:</strong></p><ol><li><strong> </strong>Increasing the saturation and/or the shade of the text color</li><li>Decreasing the saturation and increasing the tint of the background color</li></ol><p>Done together, looks like this:</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/changes-to-value-and-saturation.png" class="kg-image" alt loading="lazy" width="829" height="437" srcset="../content/images/size/w600/2022/10/changes-to-value-and-saturation.png 600w, ../content/images/2022/10/changes-to-value-and-saturation.png 829w" sizes="(min-width: 720px) 720px"><figcaption>Darken and saturate foreground elements to increase contrast with light background colors.</figcaption></figure><p>Now let's try it out. How does it look? Is the link easier to see and read?</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/improve-contrast.png" class="kg-image" alt loading="lazy" width="880" height="893" srcset="../content/images/size/w600/2022/10/improve-contrast.png 600w, ../content/images/2022/10/improve-contrast.png 880w" sizes="(min-width: 720px) 720px"></figure><p>Okay, it seems easier to read. On the branding side, we took a small hit: maybe it feels a <em>little </em>less aligned to the brand. (this is just one reason why companies spend millions on rebrands. And most of them aren't as robust as they should be.) Alas, refining your color palette is a much more complex topic, and one that I will address in another article. </p><p><strong>For now, we want to use our color picker know-how increase contrast.</strong></p><p>So with that in mind: how well does the new link color do according to WCAG guidelines? Using the same WebAIM contrast checker, let's run it through again:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/wcag-pass-1.png" class="kg-image" alt loading="lazy" width="1446" height="830" srcset="../content/images/size/w600/2022/10/wcag-pass-1.png 600w, ../content/images/size/w1000/2022/10/wcag-pass-1.png 1000w, ../content/images/2022/10/wcag-pass-1.png 1446w" sizes="(min-width: 720px) 720px"></figure><p><strong>Great success!</strong> We found a color that is based on the brand color that fully complies to minimum WCAG accessibility guidelines.</p><p>Now that we know the basics of how to use the color picker, let's get acquainted with some hot tips I've picked up.</p>
+    </article>
+
+          <div class="post-tags content-width">
+        <a href="../tag/accessibility/index.html" style="--color-accent:#000000;">Accessibility</a>
+        <a href="../tag/color/index.html" style="--color-accent:#d71d1d;">Color</a>
+        <a href="../tag/figma/index.html" style="--color-accent:#F24E1E;">Figma</a>
+    </div>
+
+        <div class="social-share content-width m-b-xl">
+  <a class="social-share__item twitter js-share" target="_blank"
+      href="https://twitter.com/share?text=How%20to%20Increase%20Contrast%20for%20Accessibility%20While%20Staying%20On-Brand&amp;url=https://www.theuilab.co/make-elements-more-readable/"
+      title="Share on Twitter" aria-label="Share on Twitter">
+    <i class="icon icon-twitter icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+</i>    <span>Tweet</span>
+  </a>
+  <a class="social-share__item facebook js-share" target="_blank"
+      href="https://www.facebook.com/sharer.php?u=https://www.theuilab.co/make-elements-more-readable/"
+      title="Share on Facebook" aria-label="Share on Facebook">
+    <i class="icon icon-facebook icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-facebook" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3" />
+</svg>
+
+
+
+</i>    <span>Share</span>
+  </a>
+  <a class="social-share__item linkedin js-share" target="_blank"
+      href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://www.theuilab.co/make-elements-more-readable/&amp;title=How%20to%20Increase%20Contrast%20for%20Accessibility%20While%20Staying%20On-Brand&amp;summary=How%20to%20Increase%20Contrast%20for%20Accessibility%20While%20Staying%20On-Brand"
+      title="Share on Linkedin" aria-label="Share on Linkedin">
+    <i class="icon icon-linkedin icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-linkedin">
+  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+  <rect x="2" y="9" width="4" height="12"></rect>
+  <circle cx="4" cy="4" r="2"></circle>
+</svg>
+</i>    <span>Share</span>
+  </a>
+  <a class="social-share__item mail"
+      href="mailto:?subject=How%20to%20Increase%20Contrast%20for%20Accessibility%20While%20Staying%20On-Brand&body=https://www.theuilab.co/make-elements-more-readable/&nbsp;How%20to%20Increase%20Contrast%20for%20Accessibility%20While%20Staying%20On-Brand"
+      title="Share by email" aria-label="Share by email">
+    <i class="icon icon-mail icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mail" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <rect x="3" y="5" width="18" height="14" rx="2" />
+  <polyline points="3 7 12 13 21 7" />
+</svg>
+</i>    <span>Email</span>
+  </a>
+  <button class="copy-link copy js-copy-link" data-url="https://www.theuilab.co/make-elements-more-readable/"
+      title="Copy to clipboard" data-label="Copied!" aria-label="Copy to clipboard">
+    <i class="icon icon-copy icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <rect x="8" y="8" width="12" height="12" rx="2" />
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2" />
+</svg>
+</i>    <span>Copy</span>
+  </button>
+</div>
+
+
+      <div class="flex flex-wrap gap-lg m-b-lg">
+        
+              </div>
+  </div>
+
+
+
+    </main>
+
+          <section class="container wrapper section cta m-b-0 is-post" >
+      <div class="cta__inner radius-double is-rel w-100 p-t-lg p-b-lg has-img">
+        <div class="cta__content flex flex-col is-rel z-index-1">
+          <h2 class="cta__title">UI design expertise <span>on tap<span></h2>
+          <p id="cta-input-label" class="cta__description opacity-075">Become a better designer in 10 minutes a day. Professional, bite-size design expertise delivered to your inbox.</p>
+          
+              <form class="subscribe-form" 
+  data-members-form="signup" data-style="inline-joined">
+  <input data-members-email class="" 
+    type="email" autocomplete="email" placeholder="Your email address" 
+    aria-labelledby="cta-input-label" required> 
+  <button class="btn btn--brand btn--gradient uppercase" type="submit">
+    <span>Subscribe</span>
+  </button>
+  <div class="msg-success">Great! Check your inbox and click the link.</div>
+  <div class="msg-error">Sorry, something went wrong. Please try again.</div>
+</form>        </div>
+        
+          <figure class="cta__media">
+            <picture class="">
+  <source 
+    data-srcset="../content/images/size/w300/format/webp/2023/03/Frame-41.png.webp 300w,../content/images/size/w600/format/webp/2023/03/Frame-41.png.webp 600w,../content/images/size/w1000/format/webp/2023/03/Frame-41.png.webp 1000w,../content/images/size/w2000/format/webp/2023/03/Frame-41.png.webp 2000w"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="lazyload cta__img"
+    data-srcset="../content/images/size/w300/2023/03/Frame-41.png 300w,../content/images/size/w600/2023/03/Frame-41.png 600w,../content/images/size/w1000/2023/03/Frame-41.png 1000w,../content/images/size/w2000/2023/03/Frame-41.png 2000w"
+    srcset="../content/images/size/w30/2023/03/Frame-41.png"
+    data-sizes="auto"
+    data-src="../content/images/size/w100/2023/03/Frame-41.png"
+    src="../content/images/size/w30/2023/03/Frame-41.png"
+    alt="The UI Lab"
+    
+  >
+</picture>          </figure>
+      </div>
+    </section>
+      
+      <footer class="footer">
+  <div class="container wrapper">
+    <div class="row m-b">
+      <div class="col-xs-12 col-md-4">
+        <div class="footer__brand flex items-center">
+            <picture class="">
+  <source 
+    data-srcset="../content/images/size/w300/format/webp/2023/03/uilab-logo.svg.webp 300w,"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="footer__logo m-r lazyload"
+    data-srcset="../content/images/2023/03/uilab-logo.svg 300w,"
+    srcset="../content/images/2023/03/uilab-logo.svg"
+    data-sizes="auto"
+    data-src="../content/images/2023/03/uilab-logo.svg"
+    src="../content/images/2023/03/uilab-logo.svg"
+    alt="The UI Lab"
+    
+  >
+</picture>        </div>
+
+        <div class="footer__description" id="footer-input-label">
+          Quick tutorials for UI design mastery.
+        </div>
+
+              <form class="subscribe-form radius-rounded m-b" 
+  data-members-form="subscribe" data-style="inline-joined">
+  <input data-members-email class="w-100 radius-rounded" 
+    type="email" autocomplete="email" placeholder="Your email address" 
+    aria-labelledby="footer-input-label" required> 
+  <button class="btn btn--primary radius-rounded" type="submit">
+    <span>Subscribe</span>
+  </button>
+  <div class="msg-success">Great! Check your inbox and click the link.</div>
+  <div class="msg-error">Sorry, something went wrong. Please try again.</div>
+</form>      </div>
+
+      <div class="col-xs-12 col-md-4 m-b footer-nav">
+        <span class="fw-700 m-b-sm display-block text-acc">Navigation</span>
+        <div class="grid col-2">
+          <ul class="nav">
+    <li class="nav-home" 
+      data-label="Home" data-length="4">
+      <a href="../index.html">
+        <span>Home</span>
+      </a>
+    </li>
+    <li class="nav-about" 
+      data-label="About" data-length="5">
+      <a href="../about/index.html">
+        <span>About</span>
+      </a>
+    </li>
+</ul>
+
+            <ul class="nav secondary submenu">
+    <li class="nav-privacy" 
+      data-label="Privacy" data-length="7">
+      <a href="../privacy/index.html">
+        <span>Privacy</span>
+      </a>
+    </li>
+    <li class="nav-terms" 
+      data-label="Terms" data-length="5">
+      <a href="../terms/index.html">
+        <span>Terms</span>
+      </a>
+    </li>
+    <li class="nav-contact" 
+      data-label="Contact" data-length="7">
+      <a href="../contact/index.html">
+        <span>Contact</span>
+      </a>
+    </li>
+    <li class="nav-natural-ui-wip" 
+      data-label="Natural UI (WIP)" data-length="16">
+      <a href="../laws-of-natural-ui/index.html">
+        <span>Natural UI (WIP)</span>
+      </a>
+    </li>
+</ul>
+        </div>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-2 m-b">
+              <span class="fw-700 m-b-sm display-block text-acc">Resources</span>
+              <ul class="nav">
+                  <li><a href="../tag/accessibility/index.html">Accessibility</a></li>
+                  <li><a href="../tag/color/index.html">Color</a></li>
+                  <li><a href="../tag/paywall-design/index.html">Paywall Design</a></li>
+                  <li><a href="../tag/visual-design/index.html">Visual Design</a></li>
+                  <li><a href="../tag/figma/index.html">Figma</a></li>
+              </ul>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-2 m-b">
+        <span class="fw-700 m-b-sm display-block text-acc">Social</span>
+        <div class="social-links flex flex-col">
+          
+
+<a href="../rss/index.rss" class="rss" aria-label="RSS"><i class="icon icon-rss icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rss" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <circle cx="5" cy="19" r="1" />
+  <path d="M4 4a16 16 0 0 1 16 16" />
+  <path d="M4 11a9 9 0 0 1 9 9" />
+</svg>
+
+
+
+</i><span>RSS</span></a>
+
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <div class="footer__copy">
+        <span>&copy;2023&nbsp;<a href="../index.html">The UI Lab</a>.</span>
+        <span>Published with&nbsp;<a href="https://ghost.org">Ghost</a>&nbsp;&&nbsp;<a href="https://bironthemes.com/themes/rinne-ghost/">Rinne</a>.</span>
+      </div>
+
+      <div class="color-scheme flex flex-cc radius-half">
+  <div class="color-scheme-symbol">
+    <span class="accent-bg"></span>
+  </div>
+  <select class="color-scheme-select radius-half js-color-scheme-select" aria-label="Change color scheme">
+    <option value="system" selected>System</option>
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+  <i class="icon icon-select">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-select" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M17 8.517L12 3 7 8.517M7 15.48l5 5.517 5-5.517"></path>
+</svg>
+
+
+
+</i></div>    </div>
+
+  </div>
+</footer>
+
+    <dialog class="notification">
+  <i class="icon icon-success notification-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M9 12l2 2l4 -4" />
+</svg>
+
+
+
+</i>  <i class="icon icon-error notification-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alert-octagon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M8.7 3h6.6c.3 0 .5 .1 .7 .3l4.7 4.7c.2 .2 .3 .4 .3 .7v6.6c0 .3 -.1 .5 -.3 .7l-4.7 4.7c-.2 .2 -.4 .3 -.7 .3h-6.6c-.3 0 -.5 -.1 -.7 -.3l-4.7 -4.7c-.2 -.2 -.3 -.4 -.3 -.7v-6.6c0 -.3 .1 -.5 .3 -.7l4.7 -4.7c.2 -.2 .4 -.3 .7 -.3z" />
+  <line x1="12" y1="8" x2="12" y2="12" />
+  <line x1="12" y1="16" x2="12.01" y2="16" />
+</svg>
+
+
+
+</i>  <i class="icon icon-warning notification-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alert-triangle" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M12 9v2m0 4v.01" />
+  <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75" />
+</svg>
+
+
+
+</i>  <p class="notification-msg signup-success">Great! You’ve successfully signed up.</p> 
+  <p class="notification-msg signin-success">Welcome back! You&#x27;ve successfully signed in.</p> 
+  <p class="notification-msg subscribe-success">You&#x27;ve successfully subscribed to The UI Lab.</p> 
+  <p class="notification-msg link-expired">Your link has expired.</p> 
+  <p class="notification-msg checkout-success">Success! Check your email for magic link to sign-in.</p> 
+  <p class="notification-msg billing-success">Success! Your billing info has been updated.</p> 
+  <p class="notification-msg billing-cancel">Your billing was not updated.</p> 
+  <button class="notification-close js-notification-close" aria-label="Close" onclick="closeNotification(event.currentTarget.parentNode);">
+    <i class="icon icon-x">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+</svg>
+</i>  </button>
+</dialog>
+
+      
+    
+
+    
+
+      <script>
+    // Copy button
+    const copyBtn = document.querySelector('.js-copy-link');
+    if (copyBtn) {
+      copyBtn.onclick = function(event) {
+        copyToClipboard(event.currentTarget, event.currentTarget.getAttribute('data-url'));
+      }
+    }
+    
+    /** 
+    * Copy to clipboard
+    * @src - source element
+    * @str - string to copy
+    */ 
+    const copyToClipboard = function(src, str) {
+      const el = document.createElement('textarea');
+      el.value = str;
+      el.setAttribute('readonly', '');
+      el.style.position = 'absolute';
+      el.style.left = '-9999px';
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+
+      src.classList.add('has-tooltip');
+      src.setAttribute('data-label', 'Copied!');
+
+      src.onmouseleave = function() { 
+        src.classList.remove('has-tooltip');
+        setTimeout(function(){
+          src.setAttribute('data-label', '');
+        }, 500); 
+      }
+    };
+  </script>
+
+<script>
+  const navItems = document.querySelectorAll('.header .nav:not(.submenu) li')
+  const allNavItems = document.querySelectorAll('.is-subitem')
+
+  // Remove '-' signs
+  allNavItems.forEach(item => {
+    const itemName = item.querySelector('a span')
+    itemName.innerText = itemName.innerText.slice(1)
+  });
+
+  // Add subitems in place
+  let subMenu, hasItems
+  navItems.forEach((item, index) => {
+    if (item.classList.contains('is-subitem') && !navItems[index - 1].classList.contains('is-subitem')) navItems[index - 1].classList.add('is-mainitem'); 
+    subMenu = item.classList.contains('is-subitem') ? subMenu : document.createElement('ul');
+    if (item.classList.contains('is-subitem')) { 
+      subMenu.appendChild(item)
+      subMenu.classList.add('nav','submenu')
+    } else { 
+      item.appendChild(subMenu)
+    }
+  });
+</script>
+
+  <script>
+    // Give the parameter a variable name
+    const qsParams = new URLSearchParams(window.location.search);
+    const isAction = qsParams.has('action');
+    const isStripe = qsParams.has('stripe');
+    const success = qsParams.get('success');
+    const action = qsParams.get('action');
+    const stripe = qsParams.get('stripe');
+
+    if (qsParams && isAction) {
+      if (success === "true") {
+        switch (action) {
+          case 'subscribe':
+            openNotification('subscribe-success');
+            break;
+          case 'signup': 
+            openNotification('signup-success');
+            break;
+          case 'signin':
+            openNotification('signin-success');
+            break;
+          default:
+            break;
+        }
+      } else {
+        openNotification('link-expired');
+      }
+    }
+
+    if (qsParams && isStripe) {
+      switch (stripe) {
+        case 'success':
+          openNotification('checkout-success');
+          break;
+        case 'billing-update-success':
+          openNotification('billing-success');
+          break;
+        case 'billing-update-cancel':
+          openNotification('billing-cancel');
+          break;
+        default:
+          break;
+      }
+    }
+
+    /**
+    * Handle Notifications
+    */
+    function openNotification(type) {
+      const notification = document.querySelector('dialog.notification');
+      if (notification) { 
+        notification.setAttribute('data-msg-type', type);
+        notification.show();
+        setTimeout(function(){ closeNotification(notification); }, 3000);
+      }
+    }
+    
+    /**
+    * Clean URI
+    */
+    function clearURI() {
+      window.history.replaceState({}, '', `${window.location.pathname}`);
+    }
+
+    function closeNotification(notification) {
+      notification.close();
+      clearURI();
+      setTimeout(function(){ notification.removeAttribute('data-msg-type') }, 500);
+    }
+  </script>
+
+
+    
+  </body>
+</html>

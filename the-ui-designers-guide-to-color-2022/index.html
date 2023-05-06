@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en" data-color-scheme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>The UI Designer&#x27;s Guide to Color in 2022 - The UI Lab</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="theme-color" content="#D2324F">
+
+
+    <link rel="preload" href="../assets/dist/app.min%EF%B9%96v=ac8ff0cc47.js" as="script">
+    <link rel="preload" href="../assets/dist/app.min%EF%B9%96v=ac8ff0cc47.css" as="style">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+
+    <link rel="preload stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&amp;display=swap" 
+          as="style" onload="this.onload=null;this.rel='stylesheet'" crossorigin>
+    <style>body { --font-body: 'Figtree', sans-serif; --font-headings: 'Figtree', sans-serif; }</style>
+
+
+
+
+
+
+
+    <script async defer src="../assets/dist/app.min%EF%B9%96v=ac8ff0cc47.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../assets/dist/app.min%EF%B9%96v=ac8ff0cc47.css">
+
+    <style>:root {
+    --global-max-width: 1320px; /* site max width */
+    --global-content-width: 680px; /* post-content-width */
+    --global-wide-width: 960px; /* site max width */
+    --global-post-hero-content-max-width: 768px;
+    --global-radius: 5px; /* default radius */
+    --global-gallery-gap: 1em; /* Image gallery distance between images */
+    --global-hyphens: none; /* none/auto */
+    --global-header-height: 72px;
+    --global-theme-notifications: visible; /* visible/hidden */
+    --global-progress-bar: visible; /* visible/hidden */
+    --global-content-preview-fading: 0%; /* 50%-100% for fading effect */
+    --global-hero-img-filter: ;
+    --global-scroll-behavior: auto;
+  }
+</style>
+
+<script>
+  let preferredTheme = localStorage.getItem('PREFERRED_COLOR_SCHEME') || `light`;
+  document.documentElement.setAttribute('data-color-scheme', preferredTheme);
+  
+  // Global values needed
+  const themeGlobal = {
+    currentPage: parseInt(''),
+    nextPage: parseInt(''),
+    nextPageLink: '',
+    maxPages: parseInt(''), 
+    lastPage: `` === `` ? true : false,
+    postsPerPage: parseInt('24'),
+    scrollPos: 0,
+    imageLightbox: `true` === `true` ? true : false
+  }
+
+  // Calculate contrast & HSL value;
+  function getBrandColorInfo(hexcolor) {
+    // get contrast
+    if (hexcolor.slice(0, 1) === '#') { hexcolor = hexcolor.slice(1); }
+    if (hexcolor.length === 3) { hexcolor = hexcolor.split('').map(function (hex) { return hex + hex;}).join(''); }
+    let r = parseInt(hexcolor.substr(0,2),16), g = parseInt(hexcolor.substr(2,2),16), b = parseInt(hexcolor.substr(4,2),16);
+    let yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    const colorContrast = (yiq >= 128) ? '#000' : '#fff';
+
+    //get HSL
+    r /= 255, g /= 255, b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min)  /  2;  
+    if ( max == min ) { h = s = 0; } else {
+      let d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch(max){
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h /= 6;
+    }
+    const colorHSL = [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
+
+    // return
+    return { colorContrast, colorHSL }
+  };
+
+  const brandColor = getBrandColorInfo("#D2324F");
+  let style = document.createElement('style');
+  style.innerHTML = `:root { 
+    --color-brand-contrast: ${brandColor.colorContrast}; 
+    --color-brand-h: ${brandColor.colorHSL[0]};
+    --color-brand-s: ${brandColor.colorHSL[1]}%;
+    --color-brand-l: ${brandColor.colorHSL[2]}%;
+    --color-brand-hsl: ${brandColor.colorHSL[0]} ${brandColor.colorHSL[1]}% ${brandColor.colorHSL[2]}%;
+  }`
+  document.getElementsByTagName('head')[0].appendChild(style);
+</script>
+
+    
+    
+     
+
+    <meta name="description" content="Practical advice you can use today to start mastering color, including what colors to use and when in your UI designs." />
+    <link rel="icon" href="../content/images/size/w256h256/2023/03/uilab-1.png" type="image/png" />
+    <link rel="canonical" href="index.html" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="The UI Lab" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="The UI Designer&#x27;s Guide to Color in 2022 - The UI Lab" />
+    <meta property="og:description" content="Color is a high-leverage tool you can use to make your UI designs more beautiful and useful. Learn to master what colors to use for UI design." />
+    <meta property="og:url" content="https://www.theuilab.co/the-ui-designers-guide-to-color-2022/" />
+    <meta property="og:image" content="https://www.theuilab.co/content/images/2022/10/uilab-color-header-masters-3.png" />
+    <meta property="article:published_time" content="2022-10-20T20:27:08.000Z" />
+    <meta property="article:modified_time" content="2022-11-14T22:46:05.000Z" />
+    <meta property="article:tag" content="Color" />
+    <meta property="article:tag" content="Visual Design" />
+    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The UI Designer&#x27;s Guide to Color in 2022 - The UI Lab" />
+    <meta name="twitter:description" content="Color is a high-leverage tool you can use to make your UI designs more beautiful and useful. Learn to master what colors to use for UI design." />
+    <meta name="twitter:url" content="https://www.theuilab.co/the-ui-designers-guide-to-color-2022/" />
+    <meta name="twitter:image" content="https://www.theuilab.co/content/images/2022/10/uilab-color-header-masters-3.png" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Gareth" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Color, Visual Design" />
+    <meta property="og:image:width" content="1065" />
+    <meta property="og:image:height" content="800" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "The UI Lab",
+        "url": "https://www.theuilab.co/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.theuilab.co/content/images/2023/03/uilab-logo.svg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Gareth",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://www.theuilab.co/content/images/2022/11/1585779806641.jpeg",
+            "width": 800,
+            "height": 800
+        },
+        "url": "../author/gareth/index.html",
+        "sameAs": []
+    },
+    "headline": "The UI Designer&#x27;s Guide to Color in 2022 - The UI Lab",
+    "url": "https://www.theuilab.co/the-ui-designers-guide-to-color-2022/",
+    "datePublished": "2022-10-20T20:27:08.000Z",
+    "dateModified": "2022-11-14T22:46:05.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://www.theuilab.co/content/images/2022/10/uilab-color-header-masters-3.png",
+        "width": 1065,
+        "height": 800
+    },
+    "keywords": "Color, Visual Design",
+    "description": "Color is a high-leverage tool you can use to make your UI designs more beautiful and useful. Learn to master what colors to use for UI design.",
+    "mainEntityOfPage": "https://www.theuilab.co/the-ui-designers-guide-to-color-2022/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.46" />
+    <link rel="alternate" type="application/rss+xml" title="The UI Lab" href="../rss/index.rss" />
+    <script defer src="https://cdn.jsdelivr.net/ghost/portal@~2.29/umd/portal.min.js" data-i18n="false" data-ghost="https://www.theuilab.co/" data-key="dd1aa13c5fa2a25d25457e722a" data-api="https://gareth.ghost.io/ghost/api/content/" crossorigin="anonymous"></script><style id="gh-members-styles">.gh-post-upgrade-cta-content,
+.gh-post-upgrade-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+    width: 100%;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.gh-post-upgrade-cta-content {
+    border-radius: 8px;
+    padding: 40px 4vw;
+}
+
+.gh-post-upgrade-cta h2 {
+    color: #ffffff;
+    font-size: 28px;
+    letter-spacing: -0.2px;
+    margin: 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta p {
+    margin: 20px 0 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta small {
+    font-size: 16px;
+    letter-spacing: -0.2px;
+}
+
+.gh-post-upgrade-cta a {
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a:hover {
+    color: #ffffff;
+    opacity: 0.8;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a.gh-btn {
+    display: block;
+    background: #ffffff;
+    text-decoration: none;
+    margin: 28px 0 0;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.gh-post-upgrade-cta a.gh-btn:hover {
+    opacity: 0.92;
+}</style><script async src="https://js.stripe.com/v3/"></script>
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="dd1aa13c5fa2a25d25457e722a" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://gareth.ghost.io/" crossorigin="anonymous"></script>
+    
+    <link href="https://www.theuilab.co/webmentions/receive/" rel="webmention" />
+    <script defer src="../public/cards.min%EF%B9%96v=ac8ff0cc47.js"></script>
+    <link rel="stylesheet" type="text/css" href="../public/cards.min%EF%B9%96v=ac8ff0cc47.css">
+    <script defer src="../public/member-attribution.min%EF%B9%96v=ac8ff0cc47.js"></script>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVC3N5X7W3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YVC3N5X7W3');
+</script>
+
+<style>.site-head-logo{
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    }
+</style>
+
+<style>.header__brand img{
+    height:40px;
+    }
+</style>
+
+<meta name="theme-color" content="#1A1F22">
+
+
+<!-- Hotjar Tracking Code for https://www.theuilab.co -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:3247598,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+
+<style>.welcome {
+        min-height:360px;
+        background-color: transparent;
+    }
+    
+    .has-bg{
+        background-color: transparent;
+    }
+   
+    
+    .welcome__title{
+        font-size:3rem;
+    }
+    
+:root {
+
+ --global-radius: 0px;
+    }
+    
+    .kg-button-card a.kg-btn {
+            border-radius: 1px;
+    }
+    
+    .btn--gradient:before {
+ background: linear-gradient(135deg,rgba(210,50,79,1),rgba(210,50,79,1));
+    }
+</style>
+
+<style>:root {--ghost-accent-color: #D2324F;}</style>
+  </head>
+  <body class="post-template tag-color tag-visual-design" data-hero-image="">
+    <div class="progress-bar"></div>
+    
+      <header class="header js-header" data-header="normal">
+  <div class="container wrapper flex is-rel header__inner">
+<a class="header__brand" href="../index.html">        <picture class="">
+  <source 
+    srcset="../content/images/size/w300/format/webp/2023/03/uilab-logo.svg.webp 300w,"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="header__logo"
+    data-srcset="../content/images/2023/03/uilab-logo.svg 300w,"
+    srcset="../content/images/2023/03/uilab-logo.svg"
+    data-sizes="auto"
+    data-src="../content/images/2023/03/uilab-logo.svg"
+    src="../content/images/2023/03/uilab-logo.svg"
+    alt="The UI Lab"
+    loading="eager"
+  >
+</picture></a>
+    <nav class="header__menu items-center">
+      <ul class="nav">
+    <li class="nav-home" 
+      data-label="Home" data-length="4">
+      <a href="../index.html">
+        <span>Home</span>
+      </a>
+    </li>
+    <li class="nav-about" 
+      data-label="About" data-length="5">
+      <a href="../about/index.html">
+        <span>About</span>
+      </a>
+    </li>
+</ul>
+
+        <div class="header__menu--sub items-center">
+          <button class="header__menu--more is-mainitem" aria-label="Menu"><i class="icon icon-dots">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-dots" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <circle cx="5" cy="12" r="1"></circle>
+  <circle cx="12" cy="12" r="1"></circle>
+  <circle cx="19" cy="12" r="1"></circle>
+</svg>
+</i></button>
+          <ul class="nav secondary submenu">
+    <li class="nav-privacy" 
+      data-label="Privacy" data-length="7">
+      <a href="../privacy/index.html">
+        <span>Privacy</span>
+      </a>
+    </li>
+    <li class="nav-terms" 
+      data-label="Terms" data-length="5">
+      <a href="../terms/index.html">
+        <span>Terms</span>
+      </a>
+    </li>
+    <li class="nav-contact" 
+      data-label="Contact" data-length="7">
+      <a href="../contact/index.html">
+        <span>Contact</span>
+      </a>
+    </li>
+    <li class="nav-natural-ui-wip" 
+      data-label="Natural UI (WIP)" data-length="16">
+      <a href="../laws-of-natural-ui/index.html">
+        <span>Natural UI (WIP)</span>
+      </a>
+    </li>
+</ul>
+        </div>
+    </nav>
+
+    <span class="header--spacer"></span>
+
+    <button class="btn-toggle header-search__toggle" data-ghost-search title="Search" aria-label="Search">
+      <i class="icon icon-search">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+</i>    </button>
+
+        <a href="../signup/index.html" class="btn signup-link btn--brand radius" data-portal="signup">Subscribe</a>
+      
+
+    <div class="member-menu js-member-menu">
+      <a href="../signup/index.html" data-portal="signup" class="signup-link">
+        <i class="icon icon-arrow-up-right icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-up-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <line x1="17" y1="7" x2="7" y2="17" />
+  <polyline points="8 7 17 7 17 16" />
+</svg>
+
+
+
+</i>Sign up
+      </a>
+
+      <a href="../signin/index.html" data-portal="signin" class="signin-link">
+        <i class="icon icon-login icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-in">
+  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+  <polyline points="10 17 15 12 10 7"></polyline>
+  <line x1="15" y1="12" x2="3" y2="12"></line>
+</svg>
+</i>Sign in
+      </a>
+</div>
+    <button class="btn-toggle menu__toggle js-menu-open"
+      type="button" title="Menu" aria-label="Menu">
+        <span></span>
+        <span></span>
+    </button>
+  </div>
+</header>
+
+
+      <div class="menu js-menu">
+  <div class="menu__header flex content-end">
+    <button class="btn-toggle menu__toggle is-active js-menu-close"
+      type="button" title="Menu" aria-label="Menu">
+        <span></span>
+        <span></span>
+    </button>
+  </div>
+
+  <nav class="menu__navigation">
+    <ul class="nav">
+    <li class="nav-home" 
+      data-label="Home" data-length="4">
+      <a href="../index.html">
+        <span>Home</span>
+      </a>
+    </li>
+    <li class="nav-about" 
+      data-label="About" data-length="5">
+      <a href="../about/index.html">
+        <span>About</span>
+      </a>
+    </li>
+</ul>
+
+      <ul class="nav secondary submenu">
+    <li class="nav-privacy" 
+      data-label="Privacy" data-length="7">
+      <a href="../privacy/index.html">
+        <span>Privacy</span>
+      </a>
+    </li>
+    <li class="nav-terms" 
+      data-label="Terms" data-length="5">
+      <a href="../terms/index.html">
+        <span>Terms</span>
+      </a>
+    </li>
+    <li class="nav-contact" 
+      data-label="Contact" data-length="7">
+      <a href="../contact/index.html">
+        <span>Contact</span>
+      </a>
+    </li>
+    <li class="nav-natural-ui-wip" 
+      data-label="Natural UI (WIP)" data-length="16">
+      <a href="../laws-of-natural-ui/index.html">
+        <span>Natural UI (WIP)</span>
+      </a>
+    </li>
+</ul>
+  </nav>
+
+  <div class="menu__actions flex w-100">
+        <a href="../signin/index.html" data-portal="signin" class="btn signin-link btn--bordered radius m-r">
+          Log in
+        </a>
+        <a href="../signup/index.html" data-portal="signup" class="btn signup-link btn--brand radius">
+          Subscribe
+        </a>
+  </div>
+</div>
+    <main class="main">
+      
+
+  <div class="container wrapper">
+  
+    <div class="post-hero is-post" 
+  data-feature-image="true" data-image-style="resource">
+  
+  <div class="post-hero__content flex flex-col">
+    <h1 class="post-hero__title">The UI Designer&#x27;s Guide to Color: 2022</h1>
+   
+      <div class="post-hero__excerpt text-acc">Color is a high-leverage tool you can use to make your UI designs more beautiful and useful. Learn to master what colors to use for UI design.</div>
+
+      <div class="post-info text-acc m-t"> 
+  <ul class="post-info__avatars">
+      <li class="author-avatar has-image">
+        <a href="../author/gareth/index.html" title="Gareth" aria-label="Gareth">
+            <picture class="">
+  <source 
+    data-srcset="../content/images/size/w30/format/webp/2022/11/1585779806641.jpeg.webp 30w,../content/images/size/w100/format/webp/2022/11/1585779806641.jpeg.webp 100w,"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="lazyload"
+    data-srcset="../content/images/size/w30/2022/11/1585779806641.jpeg 30w,../content/images/size/w100/2022/11/1585779806641.jpeg 100w,"
+    srcset="../content/images/size/w30/2022/11/1585779806641.jpeg"
+    data-sizes="auto"
+    data-src="../content/images/size/w100/2022/11/1585779806641.jpeg"
+    src="../content/images/size/w30/2022/11/1585779806641.jpeg"
+    alt="Gareth"
+    
+  >
+</picture>        </a>
+      </li>
+  </ul>
+  <div class="post-info__detail">
+    <span class="post-info__author"><a href="../author/gareth/index.html">Gareth</a></span>
+    <div class="post-info__dr">
+      <time datetime="2022-10-20">Oct 20, 2022</time> 
+      <span class="post-info__readtime">19 min read</span>
+    </div>
+  </div>
+</div>  </div>
+
+    <div class="post-hero__media">
+      <figure class="post-hero__figure">
+        <picture class="">
+  <source 
+    data-srcset="../content/images/size/w300/format/webp/2022/10/uilab-color-header-masters-3.png.webp 300w,../content/images/size/w600/format/webp/2022/10/uilab-color-header-masters-3.png.webp 600w,../content/images/size/w1000/format/webp/2022/10/uilab-color-header-masters-3.png.webp 1000w,../content/images/size/w2000/format/webp/2022/10/uilab-color-header-masters-3.png.webp 2000w"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="lazyload post-hero__img"
+    data-srcset="../content/images/size/w300/2022/10/uilab-color-header-masters-3.png 300w,../content/images/size/w600/2022/10/uilab-color-header-masters-3.png 600w,../content/images/size/w1000/2022/10/uilab-color-header-masters-3.png 1000w,../content/images/size/w2000/2022/10/uilab-color-header-masters-3.png 2000w"
+    srcset="../content/images/size/w30/2022/10/uilab-color-header-masters-3.png"
+    data-sizes="auto"
+    data-src="../content/images/size/w100/2022/10/uilab-color-header-masters-3.png"
+    src="../content/images/size/w30/2022/10/uilab-color-header-masters-3.png"
+    alt="The UI Designer&#x27;s Guide to Color: 2022"
+    
+  >
+</picture>        
+      </figure>
+    </div>
+
+</div>
+
+    <article class="post tag-color tag-visual-design content post-access-public">
+      <p><br>When I was starting my UI design journey, the topic of color gave me anxiety. It felt like people who were good at using color were tapping into some sort of unicorn blood-fueled black magic, and that no matter how hard I tried, I’d never be able to do what they did. And for context, I was feeling this way <em>with a graphic design background</em>! </p><p>Truthfully, using color in user interfaces does require some specific knowledge, but it’s far from black magic. I wish I had someone to sit down with me and tell me what I <em>actually </em>need to know, because all I had at the time was my own anxiety and a handful of “designery” articles about color theory and the golden ratio.</p><p>The truth is, like all skills in life, it’s not hard to do, you just have to learn it. And if I can learn it, you can learn it — and neither of us even has to hunt a unicorn to do it. And I’ll do you one even better: once it starts to click, it can be <em>fun</em>.</p><p>Let me caveat here for a second: I’m not going to go super deep into color theory or get too theoretical. This article is meant to be <em>practical</em>, not exhaustive. It’s my hope that by the end of this article, you’ll feel more confident to start experimenting with color yourself.</p><p><strong>I’ll cover things like:</strong></p><ul><li><strong><strong><strong>How important color is for UI design</strong></strong></strong></li><li><strong><strong><strong>What colors to use in your UI and when</strong></strong></strong></li><li><strong><strong><strong>How many colors you should use when designing a UI</strong></strong></strong></li><li><strong><strong><strong>How to know if your UI color choices look good</strong></strong></strong></li></ul><p>And I’ll include examples to help you actually see some of this stuff in action. But quickly before I go into that, I want you to keep something in mind:</p><h2 id="color-is-surprisingly-flexible">Color is surprisingly flexible</h2><p>When I went to design school, I learned that you generally want to avoid colors that clash or create a sense of vibration (for example, light blues and oranges.) But let’s take a moment to a look at this crazy use of color:</p><figure class="kg-card kg-image-card"><img src="https://lh4.googleusercontent.com/wje0NaVKIuK7HvlZ76hi4NGPQjmbVnXY5Q3rkqwD06M0Yu04l3DVnd6ZRWYdSgnq91WLrMV_SYAdyKA_pU_DoFoVTCyHKuJAIubWNaPMHgzL6OfjDaJvdhNRIaoOhG5pNy1AdqNasLCmH2IpTZQIkYHDSpBhynxTZx4QTlWzf0gVDPLPEYdcM0VKTw" class="kg-image" alt loading="lazy" width="624" height="432"></figure><p>The blue stripes inside the orange pants absolutely <em>shatter </em>the traditional take on what I learned about color. But somehow… it works? Magic. For the moment, I want you to throw out everything you thought you knew about color. To learn color, you need to experiment.</p><p>It’s important to keep in mind the context in which you’re using color. This example is an illustration, and therefore it has a different ruleset. When you use color in your UI designs, you want to use color more precisely. And whereas our friend Sebastian here probably actually <em>intended </em>to create a muddy/vibrant effect, we do not necessarily want our button text to feel that way; we want ours to be readable. <strong>Main point here? Color is weird</strong>. And cool.</p><h2 id="how-important-is-color-to-ui-design"><strong>How important is color to UI design?</strong></h2><p>Let me just be super straightforward here to dispel a myth, and hopefully save you some time: <strong>color impacts our emotions</strong>. You can fast-forward through the debate about whether color theory “works” or not. It's for real, I'm just going to tell you now.</p><p>Some associations we have with color are certainly socialized as opposed to innate. For example, there’s no reason for example to think the color blue 💙<em> </em>is associated with <em>trust </em>other than the fact that a million financial institutions use it.</p><p></p><p>And even that may be because of more innate associations like the calming effect of water or the sky when you’re interacting with a survival-related and stress-laden topic such as money. Food for another day's thought, I suppose.</p><p>I would argue that whether or not any particular color association is innate or socialized doesn’t matter. All that matters is if we have them or not, and the answer to that question is a just plain <strong>yes we do</strong>.</p><p>But let's take a quick bus ride over to an example. Think about the last time you tried a delicious new food. What did it look like?</p><p>Maybe something like this:</p><figure class="kg-card kg-image-card"><img src="https://lh3.googleusercontent.com/qOwSvluG80qI1WXoOlpOmUAqO5yvq7yzGOxnFfHWXwuu6_ZR-VvNhs3d1S8T4QLd8SY7wTTj_lFHpEpOa7WLZRWUGBtccATOak5QHF4bgk_KCB6FgB9Q2naV3bS5czTFL9Qj6_dRH3veREGNiIvNS5Y_0WPwAJOnRDDGFx1PZw6OGC-H80iMwc0aqA" class="kg-image" alt loading="lazy" width="624" height="509"></figure><p>Or this:</p><figure class="kg-card kg-image-card"><img src="https://lh3.googleusercontent.com/WiLaGND9j5pmpcRqhsqeevQZgOzA7CCG3ZWrtkSJjs3UtWICPYicRNUn9Q1JlinirgqdF5I1nvGRkx1dlqsgC9QGPwJGtmM4bVTKSCJO5kIUXIKH-OR_qi_LHZgWI-KcwQktrw09tmSP597ysquYqRkLeGYH-mP4HaDm71-FbYkUsUu3mFP5tOTMuQ" class="kg-image" alt loading="lazy" width="624" height="509"></figure><p>…. No?</p><p>Ok, maybe that first one was a little more like this:</p><figure class="kg-card kg-image-card"><img src="https://lh6.googleusercontent.com/PHpJG90ncu-QxcEnFQfnaSrQ3duk-NiXdbgKcM7VAtfPCEWwsaeDXQW4kZmTjc-OwXV_dLNrBCwhQJ_GjMLHJOX9AbWg4gFOeeEXGt0IOe7rRgFMV93XWXnmpGC2cYksOaAt0N86IWPEcgVtymadtxxeR_mEqTk8DS9PeEDDqSInOs59I514-tEFfw" class="kg-image" alt loading="lazy" width="624" height="509"></figure><p>Or this!</p><figure class="kg-card kg-image-card"><img src="https://lh3.googleusercontent.com/E0ZCdW_obSrYZNnQ-dQrBBBm435Kuuk1VPhBJbw6v6ipKEU_X6AngEfTGT7iNjZS2LMasnRlVPXrVRT6PNXy97T8bp17AXPJghIna0bQEnYZOplBAWtBUVivsdW4GMlum8CCW6HmSfc8EMV7-23dWCZZX7IKssHxD-19a69NDDP--X9G84_gn98eug" class="kg-image" alt loading="lazy" width="624" height="509"></figure><p>Alright, alright. Pretty on the nose, you say.</p><p><strong>But here's the thing:</strong> pay attention to how you<em> feel </em>when you look at the black and white version, and then, when you look at the version with color. Especially if you’re hungry. <strong>Maybe this even </strong><em><strong>made</strong></em><strong> you hungry. </strong>(sorry!)</p><p>Now, take a look back at the first image. At a glance, how easy is it for you to identify the different components of the bowl without color? With color?</p><p>When designers talk about “CoLoR tHeOrY,” it sometimes feels like a very lofty, academic, and pretentious topic. Maybe it even feels a little ... I don't know, made up?</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/z63507a90d6085.gif" class="kg-image" alt loading="lazy" width="803" height="200" srcset="../content/images/size/w600/2022/10/z63507a90d6085.gif 600w, ../content/images/2022/10/z63507a90d6085.gif 803w" sizes="(min-width: 720px) 720px"></figure><p><strong>But our food example here is the practical version of what that’s all about.</strong> We all know color is important. Maybe we just haven’t thought about <em>how </em>important it is, or maybe it feels like UI design is some other, detached world from the world of tex-mex bowls and steaks, but it’s actually one in the same.</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/uilab-confusing-alert-1.png" class="kg-image" alt loading="lazy" width="1600" height="1100" srcset="../content/images/size/w600/2022/10/uilab-confusing-alert-1.png 600w, ../content/images/size/w1000/2022/10/uilab-confusing-alert-1.png 1000w, ../content/images/2022/10/uilab-confusing-alert-1.png 1600w" sizes="(min-width: 720px) 720px"><figcaption>A great way to confuse your users</figcaption></figure><p><strong>At its core, color is just a high-bandwidth vehicle for information,</strong> both emotional and functional. It shortcuts the conscious part of your brain and taps right into the deeper subconscious part, very quickly telling us what's up without us even knowing it.</p><p>And <strong>if color is an information vehicle, and design is the science of visual communication, then color is a fundamental pillar of that science. </strong></p><p><strong>Aka, color is important as heck in UI. </strong>And it’s worth learning!</p><p>Ok. Enough on that. Still with me?</p><p>When you’re trying to up your UI design color game, you really only need to know a few basic principles to start being a capable colorer.</p><p>First, let’s take a <em>brief </em>tour of color theory.</p><h2 id="color-theory-is-kinda-simple"><strong>Color theory is kinda simple</strong></h2><p><strong>Every single color that we see is a result of a combination of 3 colors:</strong>  red 🔴, green 🟢, and blue 🔵.  These are called <strong>primary</strong> colors of light, and they are legit:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/primary-colors-1.png" class="kg-image" alt loading="lazy" width="1600" height="1100" srcset="../content/images/size/w600/2022/10/primary-colors-1.png 600w, ../content/images/size/w1000/2022/10/primary-colors-1.png 1000w, ../content/images/2022/10/primary-colors-1.png 1600w" sizes="(min-width: 720px) 720px"></figure><p>And by "every color we see," I mean <em><strong>everything</strong></em>. The color of the leaves on the trees outside, your favorite plum colored sweater, the pukey-poopy upholstered furniture set… all of it. <strong>Imagine everything you see in terms of the intensity of each of the 3 primary colors.</strong></p><p>For example, the <strong>leaves on the tree</strong> might be something like:</p><p>Red: 50% Green: 62% Blue: 25%</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/uilabco-tree-color-composition.gif" class="kg-image" alt loading="lazy" width="600" height="412" srcset="../content/images/2022/10/uilabco-tree-color-composition.gif 600w"></figure><p>And<strong> your favorite plum sweater</strong> might be:</p><p>Red: 37% Green: 31% Blue: 46%</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/uilabco-plum-color-composition.gif" class="kg-image" alt loading="lazy" width="600" height="412" srcset="../content/images/2022/10/uilabco-plum-color-composition.gif 600w"></figure><p>And <strong>grandma’s furniture</strong> might be:</p><p>Red: 72% Green: 53% Blue: 38%</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/uilabco-couch-color-composition.gif" class="kg-image" alt loading="lazy" width="600" height="412" srcset="../content/images/2022/10/uilabco-couch-color-composition.gif 600w"></figure><p><strong>I would highly, highly, highly recommend you try this: </strong></p><ol><li>Go outside</li><li>Find an object with a color you want to guess</li><li>Guess what percentages of color might make it up</li></ol><p>Practicing this is a way to make meaningful progress <strong>today</strong>.</p><p>Even just going out and doing this once a day on a walk, or when you’re picking up groceries after work, is a very real way that you can start to build your color intuition. You'll start <em>noticing </em>color more.</p><p>And even better than that, <strong>the more you do this, the more you will close the gap between your ability to imagine how something should look, and your ability to create something that looks like how you imagine it.</strong></p><p>You should also know: there are also such things as secondary and tertiary colors, and I would recommend reading up on those just so you know what they are. Secondary colors are two primary colors combined, and tertiary are the combination of a primary and secondary. </p><p>And heck, here’s a color wheel so you can see:</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/BYR_color_wheel.svg" class="kg-image" alt loading="lazy"><figcaption>A common color wheel. Pretty.</figcaption></figure><p>Otherwise, for the sake of this article and for your time, I won’t go into those any further. There are a million articles and a Wikipedia page that will do a way better job if you’re interested!</p><p>However, I wouldn’t worry too much about secondary and tertiary colors or the color wheel for now.</p><p>You’ll reference them occasionally over time, but for our purposes, we’ll focus on something else:</p><h2 id="the-color-picker">The Color Picker</h2><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/color-picker-1.png" class="kg-image" alt loading="lazy" width="1600" height="1100" srcset="../content/images/size/w600/2022/10/color-picker-1.png 600w, ../content/images/size/w1000/2022/10/color-picker-1.png 1000w, ../content/images/2022/10/color-picker-1.png 1600w" sizes="(min-width: 720px) 720px"></figure><p>Learn this tool. Once you get it, this tool will be your best friend.</p><p><strong>It’s also pretty easy, once you understand how it works:</strong></p><h3 id="hue"><strong>Hue</strong></h3><p><strong>Hue is the purest version of the color itself.</strong> It’s the mostest reddest red, and the mostest bluest blue, and so on. Primary, secondary, tertiary colors and everything in between are all hues. You control the hue by selecting a position on the rainbow bar on the bottom, and then moving the selector all the way to the top right of the bar.</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/hue-1.png" class="kg-image" alt loading="lazy" width="1600" height="1100" srcset="../content/images/size/w600/2022/10/hue-1.png 600w, ../content/images/size/w1000/2022/10/hue-1.png 1000w, ../content/images/2022/10/hue-1.png 1600w" sizes="(min-width: 720px) 720px"></figure><h3 id="value"><strong>Value</strong></h3><p><strong>Value is the amount of black (shade) or white (tint) mixed with the color.</strong> You change the value by sliding up or down. Changing this changes … well, the darkness or the lightness of the color.</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/value-1.png" class="kg-image" alt loading="lazy" width="1600" height="1100" srcset="../content/images/size/w600/2022/10/value-1.png 600w, ../content/images/size/w1000/2022/10/value-1.png 1000w, ../content/images/2022/10/value-1.png 1600w" sizes="(min-width: 720px) 720px"></figure><h3 id="saturation"><strong>Saturation</strong></h3><p><strong>Saturation is the intensity of the color.</strong> Aka, how much <em>hue</em> the color has. Change this by sliding left and right.</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/saturation-1.png" class="kg-image" alt loading="lazy" width="1600" height="1100" srcset="../content/images/size/w600/2022/10/saturation-1.png 600w, ../content/images/size/w1000/2022/10/saturation-1.png 1000w, ../content/images/2022/10/saturation-1.png 1600w" sizes="(min-width: 720px) 720px"></figure><p>And that’s literally all there is to it. You can make every single visible color by adjusting these 3 properties. And from there, it’s just a matter of practicing using it and building your color muscle.</p><p>Now knowing how to use the picker, start practicing your color-recreating abilities, but this time using a photo and the color picker. <strong>Try to recreate the color you see simply by changing the hue, saturation, and value.</strong></p><p>You will get better at this the more you do it, I promise. </p><p><strong>Eventually you’ll be nailing colors and people will be paying you to do it.</strong></p><p>So, we’ve covered the basics of color and how to create the colors you want. Now you might be wondering… okay, but what colors do I use, and when?</p><h2 id="what-colors-to-use-in-your-ui-and-when"><strong>What colors to use in your UI, and when</strong></h2><p>So here’s the thing. We know color affects how we feel. But what colors mean what? And how do you know when or when not to use a color?</p><p><strong>First you need to know that some colors take priority over others.</strong> This is because they are used to communicate very important information.</p><p>Let’s take red for example, stop signs are red because red communicates arrest, intensity, and danger. Check out this dangerous stuff:</p><figure class="kg-card kg-image-card"><img src="https://lh3.googleusercontent.com/79bduhiQMDniCO88b8nNvNQkYfrxcIJlKWlyG9rhDH9jePVEcW1e54ibBfJzvcvP9pFDj7ZeZiNrDU14dqOih4GLBdwEwHPRiuN9DNrzbz4gei0YPlmhhSOqK-_AXauppuaWwaiqaR0KgIdgsbpk_7PqjxtAy5xOyYIT8jwmZnsedflI1u2wtcQT4w" class="kg-image" alt loading="lazy" width="624" height="429"></figure><p>That’s not to say that everything that is red is dangerous. Tomatoes, for example, are a delicious red <em><strong>fruit </strong></em>(I said it) that are only dangerous when they’re being hurdled at you in a tomato fight.</p><p><strong>But the effects some colors have on our psychology are distinct and pronounced, </strong>so you want to <em>try</em> to reserve them for very important use-cases. This isn’t to say that you can’t ever use red for anything else, though. Keep in mind that these are guidelines, and guidelines can be broken when the situation calls for it.</p><figure class="kg-card kg-image-card"><img src="https://lh5.googleusercontent.com/N7IRNQ7tBgYsSS4I_MwansPhJ5WJXNIHSKxXbd4iS538Yzm0Iyel-UGOqHBlhEpN7yhZZ9dN8uA3UFPYJ1gWGv1DAGH3sLSkHsciba4o4erns8FmzUN7DhgYINim3GqJcDYkSg1GdDkK6XtHWpeQityO1aMD7my2nN2jO0tXDQeaWpEW_5sIE-btOw" class="kg-image" alt loading="lazy" width="498" height="331"></figure><p>So here’s a quick guide on when to use certain colors. Again, this is a set of guidelines intended to help you get started as a beginner, and guidelines, are… well, guidelines. Use them until you feel confident about which ones are okay breaking and when (you’ll build this muscle over time.)</p><h2 id="red"><strong>Red</strong></h2><p><strong>Common UI elements:</strong> Errors, when things are broken, alerts, alarms, critical problems, sometimes offline status, stop, destructive actions (like a “delete” button)</p><p><strong>Emotion &amp; brand associations:</strong> Danger, aggression, anger, passion, love, danger, “stop” sentiment, richness</p><h2 id="orange"><strong>Orange</strong></h2><p><strong>Common UI elements: </strong>Medium-intensity alerts, something needs attention</p><p><strong>Emotion &amp; brand assocations:</strong> Excitement, warmth</p><p><strong>Avoid:</strong> similar to red</p><h2 id="yellow"><strong>Yellow</strong></h2><p><strong>Common UI elements</strong>: not many</p><p><strong>Emotion &amp; brand assocations:</strong> Happiness, warmth, sunshine, caution</p><p><strong>Avoid: </strong>similar to red and orange</p><h2 id="green"><strong>Green</strong></h2><p><strong>Common UI elements:</strong> Online/active/positive status, done-ness (think checkmarks,) good to go, positive signals</p><p><strong>Emotion &amp; brand associations:</strong> Environment, natural, positivity, “go” sentiment</p><h2 id="blue"><strong>Blue</strong></h2><p><strong>Common UI elements:</strong> Typically only branded UI elements (buttons, etc)</p><p><strong>Emotion &amp; brand associations:</strong> Trust, calm, “all good” ness, security</p><h2 id="purple"><strong>Purple</strong></h2><p><strong>UI elements:</strong> Typically only branded UI elements (buttons, etc)</p><p><strong>Emotion &amp; brand applications:</strong> Richness, royalty, magic</p><p>Now that you know some of these associations, start looking for them in the apps and websites you use, as well as stuff out in the real world. If you’ve never touched on this before, it might blow your mind how much subtle signaling is happening on a daily basis.</p><p>Which leads me to one of the most important points I will make:</p><h2 id="you-should-limit-the-number-of-colors-you-use-in-your-ui-design"><strong>You should limit the number of colors you use in your UI design</strong></h2><p>Color is obviously an extremely useful tool in design. That being said, it’s easy to get excited and overdo the number of colors you have. I’ll be the first to say it: once you get the hang of it, color is <em>fun</em>. I <em>love </em>color. But there’s a direct relationship to the number of colors your UI uses and the complexity of your UI.</p><p><strong>As a reminder: color is a vehicle that carries information.</strong></p><p><strong>Complexity isn’t necessarily bad. </strong>It’s a good thing your glass-top stove puts red outlines where the burners underneath are so that you don’t burn your hands every gee-dang time you’re trying to make a meal. The red lines add complexity, but it’s also <em>useful </em>complexity.</p><p><strong>In UI design, too few colors can also be unhelpful. </strong>You don’t want your “Permanently Delete Forever” button to look the same as your “Sounds good” button.</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/uilab-confusingbuttons.gif" class="kg-image" alt loading="lazy" width="1200" height="825" srcset="../content/images/size/w600/2022/10/uilab-confusingbuttons.gif 600w, ../content/images/size/w1000/2022/10/uilab-confusingbuttons.gif 1000w, ../content/images/2022/10/uilab-confusingbuttons.gif 1200w" sizes="(min-width: 720px) 720px"><figcaption>In case it isn't clear... don't do this.</figcaption></figure><p>If it does, you may get people accidentally tapping it, deleting all their stuff, and getting rightfully frustrated at you for misleading them.</p><p>But too <em>many</em> colors is also unhelpful.</p><p><strong>As a rule of thumb, you want just enough color in your UI to carry the meanings you need. No more, no less.</strong></p><p>With that said, generally speaking, you’ll need to consider <strong>4 basic colors</strong> when you’re designing a new UI:</p><ol><li>Background color</li><li>Your primary, or main, color</li><li>Secondary, or accent, color</li><li>Semantic colors</li></ol><p>You may use variations within those colors, but you want to keep the total number of colors low.</p><p><strong>Also, just as a side note: primary and secondary colors in this context are not the same as primary and secondary colors on the color wheel.</strong> It just means your more important and less important color.</p><h3 id="1-background-color"><strong>1. Background color</strong></h3><p>Imagine you’re painting the walls in your apartment or house. The background color is kinda like the base wall paint color you’d choose for your interior walls. Its purpose is to serve as a backdrop for the stuff that goes on top or in front of it. Typically it’s a neutral, white-based color, or a soft gray, and it’s easy on the eyes.</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/uilab-wallcolor.png" class="kg-image" alt loading="lazy" width="1600" height="1100" srcset="../content/images/size/w600/2022/10/uilab-wallcolor.png 600w, ../content/images/size/w1000/2022/10/uilab-wallcolor.png 1000w, ../content/images/2022/10/uilab-wallcolor.png 1600w" sizes="(min-width: 720px) 720px"><figcaption>Notice how the wall color allows more dominant elements stand out. Bonus practice points: what order did you look at the objects in the room, and why? Color, size, shape, and depth all contribute to the hierarchy of the composition.</figcaption></figure><p>It should be neutral enough so that the things that will go on top of it (text, media like photos/illustrations, icons, buttons, and so on) have enough contrast to be easy to read, identify, and use. In this way, the background color you choose is actually the foundation for the visual hierarchy of your app or website.</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/uilab-nike-bgcolor.png" class="kg-image" alt loading="lazy" width="1600" height="1100" srcset="../content/images/size/w600/2022/10/uilab-nike-bgcolor.png 600w, ../content/images/size/w1000/2022/10/uilab-nike-bgcolor.png 1000w, ../content/images/2022/10/uilab-nike-bgcolor.png 1600w" sizes="(min-width: 720px) 720px"><figcaption>Can you easily identify the most important parts of the screen and where Nike thinks you should look? Thank you, neutral background color!</figcaption></figure><p><em>Although some of us may paint our walls in more fun ways, keep in mind that at the end of the day, user interfaces are tools, and people will actually be using what you’re designing here. So it’s important to be able to find things, read them, and use them, and therefore more important to use neutral colors for backgrounds. If you really love the color red, you might paint your dorm room red, but you wouldn’t surround a red emergency SOS button in a red wall. Unless you’re a horrible person.</em></p><p>It’s best to stick with 1 background color, but feel free to include a variant or two. In certain circumstances, you may need 2 background colors. Imagine Google Docs, for example, where a light gray background creates definition for a white page, and then the white page creates definition for the content (text, photos.):</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/uilab-googledocs-bgcolor.png" class="kg-image" alt loading="lazy" width="1600" height="1100" srcset="../content/images/size/w600/2022/10/uilab-googledocs-bgcolor.png 600w, ../content/images/size/w1000/2022/10/uilab-googledocs-bgcolor.png 1000w, ../content/images/2022/10/uilab-googledocs-bgcolor.png 1600w" sizes="(min-width: 720px) 720px"><figcaption>Google docs uses a light gray background color to outline the page, which then becomes the background for the written content.</figcaption></figure><h3 id="2-primary-color"><strong>2. Primary color</strong></h3><p>This is the color or colors you’ll use for large areas of your UI. In most cases it is the primary color that is associated with your brand. For Coke, think red. It will often be used for things that are on top of and therefore surrounded by your background color, and may often contain text, so it should be clearly visible and high-contrast against your background color. Also consider how easy it is to read text that is inside it.</p><p>In some cases, your primary color will be used for large branded areas, such as a header, as well as buttons.</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/uilabco-fitbit-primary-colors-2.png" class="kg-image" alt loading="lazy" width="1600" height="1100" srcset="../content/images/size/w600/2022/10/uilabco-fitbit-primary-colors-2.png 600w, ../content/images/size/w1000/2022/10/uilabco-fitbit-primary-colors-2.png 1000w, ../content/images/2022/10/uilabco-fitbit-primary-colors-2.png 1600w" sizes="(min-width: 720px) 720px"><figcaption>Fitbit uses their primary color for dominant UI elements. Yes, I need to get more sleep.</figcaption></figure><p>In some cases the primary brand color will conflict with colors that should be reserved for important states, like error states. Or it may create readability issues when text is placed over it. </p><p>Say, for example, your brand color is a bright orange. In that case, you might consider using another color that pairs well with your brand color for things like buttons (for example, if your secondary brand color is a rich black color, use that) or a shade of your primary brand color (in the Coca Cola example, a dark red) to increase the visibility of text against the button. </p><p>Or, you can use your brand color as an accent color instead. As a <em>rule of thumb</em>, your primary color should be no more than ~30% of the visible UI on your screen at any given point in time.</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/uilab-cocacola-primarycolor.png" class="kg-image" alt loading="lazy" width="1600" height="1100" srcset="../content/images/size/w600/2022/10/uilab-cocacola-primarycolor.png 600w, ../content/images/size/w1000/2022/10/uilab-cocacola-primarycolor.png 1000w, ../content/images/2022/10/uilab-cocacola-primarycolor.png 1600w" sizes="(min-width: 720px) 720px"><figcaption>Coca Cola uses their primary brand color for most UI elements and accent colors.</figcaption></figure><h3 id="3-secondary-or-accent-colors"><strong>3. Secondary, or accent, color(s)</strong></h3><p>Your accent color is typically another brand color and is often used to call attention to a specific part of the UI. For example, your main call to action buttons might use your accent color. Or you might use it for linked text or icons. Generally speaking though, your accent color should account for roughly 10% of your color usage at most.</p><p>Here's an example of background, primary, and accent colors in action:</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/uilabco-m1finance-colors.png" class="kg-image" alt loading="lazy" width="1600" height="1100" srcset="../content/images/size/w600/2022/10/uilabco-m1finance-colors.png 600w, ../content/images/size/w1000/2022/10/uilabco-m1finance-colors.png 1000w, ../content/images/2022/10/uilabco-m1finance-colors.png 1600w" sizes="(min-width: 720px) 720px"><figcaption>M1 Finance's color scheme is a bit more complex.</figcaption></figure><h3 id="4-semantic-colors"><strong>4. Semantic Colors</strong></h3><p>Semantic colors are colors you’ll use for things like errors, warnings, notifications, deleting, and so on. These are purely functional in nature, and colors you’ll want to reconcile with your color scheme at large.</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/uilabco-semantic-colors.png" class="kg-image" alt loading="lazy" width="1600" height="1100" srcset="../content/images/size/w600/2022/10/uilabco-semantic-colors.png 600w, ../content/images/size/w1000/2022/10/uilabco-semantic-colors.png 1000w, ../content/images/2022/10/uilabco-semantic-colors.png 1600w" sizes="(min-width: 720px) 720px"></figure><p>Now, all of this is only a guideline; over time you’ll build a better sense of when and where you want to apply your color.</p><p>And I know what you might be thinking right now: wait a second, your primary color can be your brand color. But your accent color can also be your brand color? Which should I use for which?</p><p><strong>The cold hard facts: it’s not a perfect science.</strong></p><p>Here’s what I’d recommend.</p><p>Start with a baseline of guidelines (60% background / 30% primary / 10% accent) and semantic colors (examples: errors = red,) and build on it over time. Each app and website is unique, and the more you practice using color, the more you’ll build intuition of which color, how much to use, when, and where.</p><p>You may decide that you don’t need a primary color in your design at all, and that you want your brand to come into play in the form of photos and accent colors. As with everything in UI design, context is important.</p><p>Nike is an excellent example of this: they made the decision to focus much of the visual attention on the photography of their shoes, since by nature, this is their “product”. The result? Most of their actual “UI” is white or light gray background. Their primary color is used for call to action buttons (aka Add to Cart) and they merely sprinkle in an orange accent color throughout the app:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/uilab-nike-primary-accent-1.png" class="kg-image" alt loading="lazy" width="1600" height="1100" srcset="../content/images/size/w600/2022/10/uilab-nike-primary-accent-1.png 600w, ../content/images/size/w1000/2022/10/uilab-nike-primary-accent-1.png 1000w, ../content/images/2022/10/uilab-nike-primary-accent-1.png 1600w" sizes="(min-width: 720px) 720px"></figure><p><strong>At the end of the day, you need to do some of your own experimentation to get a sense for which colors to use where. </strong>Find examples of apps or websites you like, and copy them. Learn how many colors they’re using, and see if you can find a pattern or a system.<br></p><h2 id="there-is-no-perfect-science-to-making-something-%E2%80%9Clook-good%E2%80%9D"><strong>There is no perfect science to making something “look good”</strong></h2><p>Unfortunately for those of us graced with the affliction of perfectionism, I’m here to break it to you: you can’t logic color past a certain point.</p><p><strong>The truth is, it’s like learning a language.</strong></p><p>First, you learn the words. Get a sense for what words mean what, and when to use them. Then, you learn the rules. “Never start a sentence with the word ‘but’,” they say. “But starting a sentence with ‘but’ adds tonality to your writing!” you say. See what I did there? You learn the rules, and then you learn how to break, or maybe more accurately, <em>bend</em> them.</p><p><strong>Unfortunately, there’s no objective way to know if the colors you’re using “look good”.</strong></p><p>You <em>can</em>, however, learn by paying attention to things that <em>you</em> think look good, observing how it’s being done, and learning how to do it yourself.</p><p><strong>That being said, UI design is, first and foremost, about usability. </strong>Here’s a practical checklist you can run through as you’re working on something:</p><ol><li><strong>Can you read it</strong></li><li><strong>Can other people read it</strong></li><li><strong>Would the brand do it</strong></li><li><strong>Be kind to yourself</strong></li></ol><p>By running your designs through these checks, you can at least start to understand if your UI will be easy to read and use.</p><h3 id="1-can-you-read-it">1. Can YOU read it?</h3><p>Okay, so you came up with a color scheme, and you tried designing something with it. <strong>The first, fastest, most practical way to understand if your design works or not is a little closer to home than you think: yourself.</strong></p><p>You are, after all, a human being. That’s all it takes to be a qualified user. So tap into your own user sensibilities, imagine you’re not you… and take a look.</p><p>What do you think? Is it easy to read? Is it easy to know what to do next? Do you know where to tap? If not: try to identify what’s going wrong. Maybe one area looks right, and one doesn’t.</p><p>There’s no speed-running this process; it’s how you have to learn.</p><p>Look at what you’re doing, and look at examples of what others are doing where you don’t get that prickly uncomfortable feeling. Compare them. Figure out what’s different and try something else. Maybe it’s a contrast issue. Maybe the colors just don’t jive together.</p><h3 id="2-make-sure-other-people-can-read-it">2. Make sure other people can read it</h3><p>If you’re not familiar with the topic, designing for accessibility is essentially the philosophy of designing things in a way that allows the maximum number of people to successfully use whatever you designed.</p><p>In UI design, this often plays out as making sure the contrast between certain elements in your design is high enough that is easy to read even for the most vision-impaired.</p><p><strong>Why’s that a good idea? By designing something to be effective for those who would find it most difficult to use, we are putting maximum effort into designing it well</strong><em><strong>, period</strong></em><strong>.</strong> And if we can make life easier for more people, then we’re doing our jobs well too.</p><p>A tool that you can use for this kind of accessibility checking is a contrast checker. There are many available, just be sure to use one that adheres to WCAG (<strong>Web Content Accessibility Guidelines).</strong></p><p><a href="https://webaim.org/resources/contrastchecker/?ref=theuilab.co">I like this one.</a></p><h3 id="3-do-things-that-make-sense-for-the-brand">3. Do things that make sense for the brand</h3><p>Coca Cola’s not about to launch their main app with big green, purple and yellow banners and buttons.</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/uilab-cocacola-bad-1.png" class="kg-image" alt loading="lazy" width="1600" height="1100" srcset="../content/images/size/w600/2022/10/uilab-cocacola-bad-1.png 600w, ../content/images/size/w1000/2022/10/uilab-cocacola-bad-1.png 1000w, ../content/images/2022/10/uilab-cocacola-bad-1.png 1600w" sizes="(min-width: 720px) 720px"><figcaption>This won't happen until 2084</figcaption></figure><p>Branding is a much larger topic, but go back to the color associations drawing board and pull from there. Should people feel a sense of trust when they come into your app? Or do you want them to feel engaged and excited? How about calm and relaxed? Maybe like they’re in a place of luxury? What colors can you lean into to match the the goal of your new “brand”?</p><p>There’s a reason Tinder is fiery red, and why Apple is an austere white and black.</p><h3 id="4-don%E2%80%99t-stress-about-being-unique">4. Don’t stress about being unique</h3><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/anchromanBigDeal.gif.webp" class="kg-image" alt loading="lazy" width="300" height="151"></figure><p>Honestly, this is such a hard thing as a designer. But the truth is, there are <em>so many people on this planet and like, so many of those people have had ideas and businesses and apps and websites.</em></p><p><strong>I will tell you now: it’s all been done before.</strong> Every color scheme under the moon has been thought of. It’s how well you use it to solve the problem, and the context you apply it in that will make it successful or not. </p><p>Mozart didn’t bother himself with whether or not others had used notes in a certain order. Rather, he focused on telling the story he needed to tell through music, combining techniques created by others before him, and the result ended up being magnificent.</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/mozart-wink.gif" class="kg-image" alt loading="lazy" width="220" height="220"></figure><p>The sooner you free yourself of the burden of trying to be unique, and instead putting your focus on solving problems for others, the sooner you’ll be on your way to coming up with some excellent designs.</p><p>When you’re starting out, just focus on making something <em>work</em>. Just because Walmart uses white, blue, and orange, doesn’t mean you can’t. Innovation isn’t invention out of thin air, it’s remixing old ideas into new contexts to create new ones. Seriously, I am saving you a ton of existential stress.  Don’t. Sweat. It. Just focus on practicing.</p><p>With all that said…</p><h2 id="color-isn%E2%80%99t-magic%E2%80%A6-but-it-is-powerful"><strong>Color isn’t magic… but it </strong><em><strong>is</strong></em><strong> powerful</strong></h2><p>Now that you hopefully have some sense of why using color effectively is important, as well as how to use color in your designs, here’s what I’d recommend: </p><p><strong>Have fun with it.</strong> </p><p>Keep guidelines in mind, experiment, and observe. Notice how other apps that you like are using color. Listen to your own intuition as a user. And ask others how easy it is to use, see, or read things in your designs.</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f75707065726c696e652f637572726963756c756d2d6173736574732f70356a732f6a616b652e676966.gif" class="kg-image" alt loading="lazy" width="500" height="255"></figure><p>Observing others who do something well, and then trying to recreate it, is the fastest and most reliable way to learn something new.</p><p>There’s no shortcut to learning how to wield color like a magician, but I promise you: the more you pay attention to it in your surroundings, and the more you play around with it, the stronger those color muscles will get.</p><p>Happy coloring! 🎨<br></p><div class="kg-card kg-callout-card kg-callout-card-grey"><div class="kg-callout-emoji">❤️</div><div class="kg-callout-text">Feedback? Questions? Please share them! I'm not a writer by trade and this blog post was incredibly difficult for me to write, so if you think I've forgotten something crucial or something is unclear, please let me know at <a href="mailto:jointheuilab@gmail.com?ref=theuilab.co">jointheuilab@gmail.com</a></div></div>
+    </article>
+
+          <div class="post-tags content-width">
+        <a href="../tag/color/index.html" style="--color-accent:#d71d1d;">Color</a>
+        <a href="../tag/visual-design/index.html" >Visual Design</a>
+    </div>
+
+        <div class="social-share content-width m-b-xl">
+  <a class="social-share__item twitter js-share" target="_blank"
+      href="https://twitter.com/share?text=The%20UI%20Designer&apos;s%20Guide%20to%20Color%3A%202022&amp;url=https://www.theuilab.co/the-ui-designers-guide-to-color-2022/"
+      title="Share on Twitter" aria-label="Share on Twitter">
+    <i class="icon icon-twitter icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+</i>    <span>Tweet</span>
+  </a>
+  <a class="social-share__item facebook js-share" target="_blank"
+      href="https://www.facebook.com/sharer.php?u=https://www.theuilab.co/the-ui-designers-guide-to-color-2022/"
+      title="Share on Facebook" aria-label="Share on Facebook">
+    <i class="icon icon-facebook icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-facebook" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3" />
+</svg>
+
+
+
+</i>    <span>Share</span>
+  </a>
+  <a class="social-share__item linkedin js-share" target="_blank"
+      href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://www.theuilab.co/the-ui-designers-guide-to-color-2022/&amp;title=The%20UI%20Designer&apos;s%20Guide%20to%20Color%3A%202022&amp;summary=The%20UI%20Designer&apos;s%20Guide%20to%20Color%3A%202022"
+      title="Share on Linkedin" aria-label="Share on Linkedin">
+    <i class="icon icon-linkedin icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-linkedin">
+  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+  <rect x="2" y="9" width="4" height="12"></rect>
+  <circle cx="4" cy="4" r="2"></circle>
+</svg>
+</i>    <span>Share</span>
+  </a>
+  <a class="social-share__item mail"
+      href="mailto:?subject=The%20UI%20Designer's%20Guide%20to%20Color%3A%202022&body=https://www.theuilab.co/the-ui-designers-guide-to-color-2022/&nbsp;The%20UI%20Designer's%20Guide%20to%20Color%3A%202022"
+      title="Share by email" aria-label="Share by email">
+    <i class="icon icon-mail icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mail" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <rect x="3" y="5" width="18" height="14" rx="2" />
+  <polyline points="3 7 12 13 21 7" />
+</svg>
+</i>    <span>Email</span>
+  </a>
+  <button class="copy-link copy js-copy-link" data-url="https://www.theuilab.co/the-ui-designers-guide-to-color-2022/"
+      title="Copy to clipboard" data-label="Copied!" aria-label="Copy to clipboard">
+    <i class="icon icon-copy icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <rect x="8" y="8" width="12" height="12" rx="2" />
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2" />
+</svg>
+</i>    <span>Copy</span>
+  </button>
+</div>
+
+
+      <div class="flex flex-wrap gap-lg m-b-lg">
+        
+              <div class="related-posts radius-double p-lg flex-1 self-align-start">
+        <span class="section-title sm m-b uppercase">Read next</span>
+        <div class="post-list m-b-sm">
+            <a class="post-list-item" href="../make-elements-more-readable/index.html">
+              <h3 class="post-list-item__title">How to Increase Contrast for Accessibility While Staying On-Brand</h3>
+              <i class="icon icon-chevron-right">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <polyline points="9 6 15 12 9 18"></polyline>
+</svg>
+</i>            </a>
+            <a class="post-list-item" href="../use-the-eyedropper-tool/index.html">
+              <h3 class="post-list-item__title">How to Use the Eyedropper Tool in Figma</h3>
+              <i class="icon icon-chevron-right">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <polyline points="9 6 15 12 9 18"></polyline>
+</svg>
+</i>            </a>
+            <a class="post-list-item" href="../how-to-use-the-figma-color-picker/index.html">
+              <h3 class="post-list-item__title">How To Use the Figma Color Picker</h3>
+              <i class="icon icon-chevron-right">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <polyline points="9 6 15 12 9 18"></polyline>
+</svg>
+</i>            </a>
+        </div>
+      </div>
+      </div>
+  </div>
+
+
+
+    </main>
+
+          <section class="container wrapper section cta m-b-0 is-post" >
+      <div class="cta__inner radius-double is-rel w-100 p-t-lg p-b-lg has-img">
+        <div class="cta__content flex flex-col is-rel z-index-1">
+          <h2 class="cta__title">UI design expertise <span>on tap<span></h2>
+          <p id="cta-input-label" class="cta__description opacity-075">Become a better designer in 10 minutes a day. Professional, bite-size design expertise delivered to your inbox.</p>
+          
+              <form class="subscribe-form" 
+  data-members-form="signup" data-style="inline-joined">
+  <input data-members-email class="" 
+    type="email" autocomplete="email" placeholder="Your email address" 
+    aria-labelledby="cta-input-label" required> 
+  <button class="btn btn--brand btn--gradient uppercase" type="submit">
+    <span>Subscribe</span>
+  </button>
+  <div class="msg-success">Great! Check your inbox and click the link.</div>
+  <div class="msg-error">Sorry, something went wrong. Please try again.</div>
+</form>        </div>
+        
+          <figure class="cta__media">
+            <picture class="">
+  <source 
+    data-srcset="../content/images/size/w300/format/webp/2023/03/Frame-41.png.webp 300w,../content/images/size/w600/format/webp/2023/03/Frame-41.png.webp 600w,../content/images/size/w1000/format/webp/2023/03/Frame-41.png.webp 1000w,../content/images/size/w2000/format/webp/2023/03/Frame-41.png.webp 2000w"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="lazyload cta__img"
+    data-srcset="../content/images/size/w300/2023/03/Frame-41.png 300w,../content/images/size/w600/2023/03/Frame-41.png 600w,../content/images/size/w1000/2023/03/Frame-41.png 1000w,../content/images/size/w2000/2023/03/Frame-41.png 2000w"
+    srcset="../content/images/size/w30/2023/03/Frame-41.png"
+    data-sizes="auto"
+    data-src="../content/images/size/w100/2023/03/Frame-41.png"
+    src="../content/images/size/w30/2023/03/Frame-41.png"
+    alt="The UI Lab"
+    
+  >
+</picture>          </figure>
+      </div>
+    </section>
+      
+      <footer class="footer">
+  <div class="container wrapper">
+    <div class="row m-b">
+      <div class="col-xs-12 col-md-4">
+        <div class="footer__brand flex items-center">
+            <picture class="">
+  <source 
+    data-srcset="../content/images/size/w300/format/webp/2023/03/uilab-logo.svg.webp 300w,"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="footer__logo m-r lazyload"
+    data-srcset="../content/images/2023/03/uilab-logo.svg 300w,"
+    srcset="../content/images/2023/03/uilab-logo.svg"
+    data-sizes="auto"
+    data-src="../content/images/2023/03/uilab-logo.svg"
+    src="../content/images/2023/03/uilab-logo.svg"
+    alt="The UI Lab"
+    
+  >
+</picture>        </div>
+
+        <div class="footer__description" id="footer-input-label">
+          Quick tutorials for UI design mastery.
+        </div>
+
+              <form class="subscribe-form radius-rounded m-b" 
+  data-members-form="subscribe" data-style="inline-joined">
+  <input data-members-email class="w-100 radius-rounded" 
+    type="email" autocomplete="email" placeholder="Your email address" 
+    aria-labelledby="footer-input-label" required> 
+  <button class="btn btn--primary radius-rounded" type="submit">
+    <span>Subscribe</span>
+  </button>
+  <div class="msg-success">Great! Check your inbox and click the link.</div>
+  <div class="msg-error">Sorry, something went wrong. Please try again.</div>
+</form>      </div>
+
+      <div class="col-xs-12 col-md-4 m-b footer-nav">
+        <span class="fw-700 m-b-sm display-block text-acc">Navigation</span>
+        <div class="grid col-2">
+          <ul class="nav">
+    <li class="nav-home" 
+      data-label="Home" data-length="4">
+      <a href="../index.html">
+        <span>Home</span>
+      </a>
+    </li>
+    <li class="nav-about" 
+      data-label="About" data-length="5">
+      <a href="../about/index.html">
+        <span>About</span>
+      </a>
+    </li>
+</ul>
+
+            <ul class="nav secondary submenu">
+    <li class="nav-privacy" 
+      data-label="Privacy" data-length="7">
+      <a href="../privacy/index.html">
+        <span>Privacy</span>
+      </a>
+    </li>
+    <li class="nav-terms" 
+      data-label="Terms" data-length="5">
+      <a href="../terms/index.html">
+        <span>Terms</span>
+      </a>
+    </li>
+    <li class="nav-contact" 
+      data-label="Contact" data-length="7">
+      <a href="../contact/index.html">
+        <span>Contact</span>
+      </a>
+    </li>
+    <li class="nav-natural-ui-wip" 
+      data-label="Natural UI (WIP)" data-length="16">
+      <a href="../laws-of-natural-ui/index.html">
+        <span>Natural UI (WIP)</span>
+      </a>
+    </li>
+</ul>
+        </div>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-2 m-b">
+              <span class="fw-700 m-b-sm display-block text-acc">Resources</span>
+              <ul class="nav">
+                  <li><a href="../tag/accessibility/index.html">Accessibility</a></li>
+                  <li><a href="../tag/color/index.html">Color</a></li>
+                  <li><a href="../tag/paywall-design/index.html">Paywall Design</a></li>
+                  <li><a href="../tag/visual-design/index.html">Visual Design</a></li>
+                  <li><a href="../tag/figma/index.html">Figma</a></li>
+              </ul>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-2 m-b">
+        <span class="fw-700 m-b-sm display-block text-acc">Social</span>
+        <div class="social-links flex flex-col">
+          
+
+<a href="../rss/index.rss" class="rss" aria-label="RSS"><i class="icon icon-rss icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rss" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <circle cx="5" cy="19" r="1" />
+  <path d="M4 4a16 16 0 0 1 16 16" />
+  <path d="M4 11a9 9 0 0 1 9 9" />
+</svg>
+
+
+
+</i><span>RSS</span></a>
+
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <div class="footer__copy">
+        <span>&copy;2023&nbsp;<a href="../index.html">The UI Lab</a>.</span>
+        <span>Published with&nbsp;<a href="https://ghost.org">Ghost</a>&nbsp;&&nbsp;<a href="https://bironthemes.com/themes/rinne-ghost/">Rinne</a>.</span>
+      </div>
+
+      <div class="color-scheme flex flex-cc radius-half">
+  <div class="color-scheme-symbol">
+    <span class="accent-bg"></span>
+  </div>
+  <select class="color-scheme-select radius-half js-color-scheme-select" aria-label="Change color scheme">
+    <option value="system" selected>System</option>
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+  <i class="icon icon-select">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-select" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M17 8.517L12 3 7 8.517M7 15.48l5 5.517 5-5.517"></path>
+</svg>
+
+
+
+</i></div>    </div>
+
+  </div>
+</footer>
+
+    <dialog class="notification">
+  <i class="icon icon-success notification-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M9 12l2 2l4 -4" />
+</svg>
+
+
+
+</i>  <i class="icon icon-error notification-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alert-octagon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M8.7 3h6.6c.3 0 .5 .1 .7 .3l4.7 4.7c.2 .2 .3 .4 .3 .7v6.6c0 .3 -.1 .5 -.3 .7l-4.7 4.7c-.2 .2 -.4 .3 -.7 .3h-6.6c-.3 0 -.5 -.1 -.7 -.3l-4.7 -4.7c-.2 -.2 -.3 -.4 -.3 -.7v-6.6c0 -.3 .1 -.5 .3 -.7l4.7 -4.7c.2 -.2 .4 -.3 .7 -.3z" />
+  <line x1="12" y1="8" x2="12" y2="12" />
+  <line x1="12" y1="16" x2="12.01" y2="16" />
+</svg>
+
+
+
+</i>  <i class="icon icon-warning notification-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alert-triangle" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M12 9v2m0 4v.01" />
+  <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75" />
+</svg>
+
+
+
+</i>  <p class="notification-msg signup-success">Great! You’ve successfully signed up.</p> 
+  <p class="notification-msg signin-success">Welcome back! You&#x27;ve successfully signed in.</p> 
+  <p class="notification-msg subscribe-success">You&#x27;ve successfully subscribed to The UI Lab.</p> 
+  <p class="notification-msg link-expired">Your link has expired.</p> 
+  <p class="notification-msg checkout-success">Success! Check your email for magic link to sign-in.</p> 
+  <p class="notification-msg billing-success">Success! Your billing info has been updated.</p> 
+  <p class="notification-msg billing-cancel">Your billing was not updated.</p> 
+  <button class="notification-close js-notification-close" aria-label="Close" onclick="closeNotification(event.currentTarget.parentNode);">
+    <i class="icon icon-x">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+</svg>
+</i>  </button>
+</dialog>
+
+      
+    
+
+    
+
+      <script>
+    // Copy button
+    const copyBtn = document.querySelector('.js-copy-link');
+    if (copyBtn) {
+      copyBtn.onclick = function(event) {
+        copyToClipboard(event.currentTarget, event.currentTarget.getAttribute('data-url'));
+      }
+    }
+    
+    /** 
+    * Copy to clipboard
+    * @src - source element
+    * @str - string to copy
+    */ 
+    const copyToClipboard = function(src, str) {
+      const el = document.createElement('textarea');
+      el.value = str;
+      el.setAttribute('readonly', '');
+      el.style.position = 'absolute';
+      el.style.left = '-9999px';
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+
+      src.classList.add('has-tooltip');
+      src.setAttribute('data-label', 'Copied!');
+
+      src.onmouseleave = function() { 
+        src.classList.remove('has-tooltip');
+        setTimeout(function(){
+          src.setAttribute('data-label', '');
+        }, 500); 
+      }
+    };
+  </script>
+
+<script>
+  const navItems = document.querySelectorAll('.header .nav:not(.submenu) li')
+  const allNavItems = document.querySelectorAll('.is-subitem')
+
+  // Remove '-' signs
+  allNavItems.forEach(item => {
+    const itemName = item.querySelector('a span')
+    itemName.innerText = itemName.innerText.slice(1)
+  });
+
+  // Add subitems in place
+  let subMenu, hasItems
+  navItems.forEach((item, index) => {
+    if (item.classList.contains('is-subitem') && !navItems[index - 1].classList.contains('is-subitem')) navItems[index - 1].classList.add('is-mainitem'); 
+    subMenu = item.classList.contains('is-subitem') ? subMenu : document.createElement('ul');
+    if (item.classList.contains('is-subitem')) { 
+      subMenu.appendChild(item)
+      subMenu.classList.add('nav','submenu')
+    } else { 
+      item.appendChild(subMenu)
+    }
+  });
+</script>
+
+  <script>
+    // Give the parameter a variable name
+    const qsParams = new URLSearchParams(window.location.search);
+    const isAction = qsParams.has('action');
+    const isStripe = qsParams.has('stripe');
+    const success = qsParams.get('success');
+    const action = qsParams.get('action');
+    const stripe = qsParams.get('stripe');
+
+    if (qsParams && isAction) {
+      if (success === "true") {
+        switch (action) {
+          case 'subscribe':
+            openNotification('subscribe-success');
+            break;
+          case 'signup': 
+            openNotification('signup-success');
+            break;
+          case 'signin':
+            openNotification('signin-success');
+            break;
+          default:
+            break;
+        }
+      } else {
+        openNotification('link-expired');
+      }
+    }
+
+    if (qsParams && isStripe) {
+      switch (stripe) {
+        case 'success':
+          openNotification('checkout-success');
+          break;
+        case 'billing-update-success':
+          openNotification('billing-success');
+          break;
+        case 'billing-update-cancel':
+          openNotification('billing-cancel');
+          break;
+        default:
+          break;
+      }
+    }
+
+    /**
+    * Handle Notifications
+    */
+    function openNotification(type) {
+      const notification = document.querySelector('dialog.notification');
+      if (notification) { 
+        notification.setAttribute('data-msg-type', type);
+        notification.show();
+        setTimeout(function(){ closeNotification(notification); }, 3000);
+      }
+    }
+    
+    /**
+    * Clean URI
+    */
+    function clearURI() {
+      window.history.replaceState({}, '', `${window.location.pathname}`);
+    }
+
+    function closeNotification(notification) {
+      notification.close();
+      clearURI();
+      setTimeout(function(){ notification.removeAttribute('data-msg-type') }, 500);
+    }
+  </script>
+
+
+    
+  </body>
+</html>

@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en" data-color-scheme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>6 Time-saving Figma Features You Should Know – The UI Lab</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="theme-color" content="#D2324F">
+
+
+    <link rel="preload" href="../assets/dist/app.min%EF%B9%96v=ac8ff0cc47.js" as="script">
+    <link rel="preload" href="../assets/dist/app.min%EF%B9%96v=ac8ff0cc47.css" as="style">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+
+    <link rel="preload stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&amp;display=swap" 
+          as="style" onload="this.onload=null;this.rel='stylesheet'" crossorigin>
+    <style>body { --font-body: 'Figtree', sans-serif; --font-headings: 'Figtree', sans-serif; }</style>
+
+
+
+
+
+
+
+    <script async defer src="../assets/dist/app.min%EF%B9%96v=ac8ff0cc47.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../assets/dist/app.min%EF%B9%96v=ac8ff0cc47.css">
+
+    <style>:root {
+    --global-max-width: 1320px; /* site max width */
+    --global-content-width: 680px; /* post-content-width */
+    --global-wide-width: 960px; /* site max width */
+    --global-post-hero-content-max-width: 768px;
+    --global-radius: 5px; /* default radius */
+    --global-gallery-gap: 1em; /* Image gallery distance between images */
+    --global-hyphens: none; /* none/auto */
+    --global-header-height: 72px;
+    --global-theme-notifications: visible; /* visible/hidden */
+    --global-progress-bar: visible; /* visible/hidden */
+    --global-content-preview-fading: 0%; /* 50%-100% for fading effect */
+    --global-hero-img-filter: ;
+    --global-scroll-behavior: auto;
+  }
+</style>
+
+<script>
+  let preferredTheme = localStorage.getItem('PREFERRED_COLOR_SCHEME') || `light`;
+  document.documentElement.setAttribute('data-color-scheme', preferredTheme);
+  
+  // Global values needed
+  const themeGlobal = {
+    currentPage: parseInt(''),
+    nextPage: parseInt(''),
+    nextPageLink: '',
+    maxPages: parseInt(''), 
+    lastPage: `` === `` ? true : false,
+    postsPerPage: parseInt('24'),
+    scrollPos: 0,
+    imageLightbox: `true` === `true` ? true : false
+  }
+
+  // Calculate contrast & HSL value;
+  function getBrandColorInfo(hexcolor) {
+    // get contrast
+    if (hexcolor.slice(0, 1) === '#') { hexcolor = hexcolor.slice(1); }
+    if (hexcolor.length === 3) { hexcolor = hexcolor.split('').map(function (hex) { return hex + hex;}).join(''); }
+    let r = parseInt(hexcolor.substr(0,2),16), g = parseInt(hexcolor.substr(2,2),16), b = parseInt(hexcolor.substr(4,2),16);
+    let yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    const colorContrast = (yiq >= 128) ? '#000' : '#fff';
+
+    //get HSL
+    r /= 255, g /= 255, b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min)  /  2;  
+    if ( max == min ) { h = s = 0; } else {
+      let d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch(max){
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h /= 6;
+    }
+    const colorHSL = [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
+
+    // return
+    return { colorContrast, colorHSL }
+  };
+
+  const brandColor = getBrandColorInfo("#D2324F");
+  let style = document.createElement('style');
+  style.innerHTML = `:root { 
+    --color-brand-contrast: ${brandColor.colorContrast}; 
+    --color-brand-h: ${brandColor.colorHSL[0]};
+    --color-brand-s: ${brandColor.colorHSL[1]}%;
+    --color-brand-l: ${brandColor.colorHSL[2]}%;
+    --color-brand-hsl: ${brandColor.colorHSL[0]} ${brandColor.colorHSL[1]}% ${brandColor.colorHSL[2]}%;
+  }`
+  document.getElementsByTagName('head')[0].appendChild(style);
+</script>
+
+    
+    
+     
+
+    <meta name="description" content="These Figma pro tips will save you a ton of time and help you become a faster and more confident designer." />
+    <link rel="icon" href="../content/images/size/w256h256/2023/03/uilab-1.png" type="image/png" />
+    <link rel="canonical" href="index.html" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="The UI Lab" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="6 Time-saving Figma Features You Should Know – The UI Lab" />
+    <meta property="og:description" content="These Figma pro tips will save you a ton of time and help you become a faster and more confident designer." />
+    <meta property="og:url" content="https://www.theuilab.co/6-figma-timesavers/" />
+    <meta property="og:image" content="https://www.theuilab.co/content/images/2022/11/Figma-Timesavers-5.png" />
+    <meta property="article:published_time" content="2022-11-11T00:50:00.000Z" />
+    <meta property="article:modified_time" content="2022-11-16T15:21:10.000Z" />
+    <meta property="article:tag" content="Figma" />
+    <meta property="article:tag" content="Blog" />
+    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="6 Time-saving Figma Features You Should Know – The UI Lab" />
+    <meta name="twitter:description" content="These Figma pro tips will save you a ton of time and help you become a faster and more confident designer." />
+    <meta name="twitter:url" content="https://www.theuilab.co/6-figma-timesavers/" />
+    <meta name="twitter:image" content="https://www.theuilab.co/content/images/2022/11/Figma-Timesavers-5.png" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Gareth" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Figma, Blog" />
+    <meta property="og:image:width" content="1600" />
+    <meta property="og:image:height" content="1200" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "The UI Lab",
+        "url": "https://www.theuilab.co/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.theuilab.co/content/images/2023/03/uilab-logo.svg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Gareth",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://www.theuilab.co/content/images/2022/11/1585779806641.jpeg",
+            "width": 800,
+            "height": 800
+        },
+        "url": "../author/gareth/index.html",
+        "sameAs": []
+    },
+    "headline": "6 Time-saving Figma Features You Should Know – The UI Lab",
+    "url": "https://www.theuilab.co/6-figma-timesavers/",
+    "datePublished": "2022-11-11T00:50:00.000Z",
+    "dateModified": "2022-11-16T15:21:10.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://www.theuilab.co/content/images/2022/11/Figma-Timesavers-5.png",
+        "width": 1600,
+        "height": 1200
+    },
+    "keywords": "Figma, Blog",
+    "description": "I was intimidated the first time I had to use Figma. Before Figma, my UI design world existed within Sketch, Adobe XD, even sometimes Adobe Illustrator.\n\nFigma was a completely different way of doing things; all the panels and tools were in different places, it almost felt empty in a way, not to mention all of the sudden I was designing collaboratively live with other people.\n\nOver time, I&#x27;ve learned a lot of the hidden and nuanced functionality built into Figma that makes design a lot easier. A",
+    "mainEntityOfPage": "https://www.theuilab.co/6-figma-timesavers/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.46" />
+    <link rel="alternate" type="application/rss+xml" title="The UI Lab" href="../rss/index.rss" />
+    <script defer src="https://cdn.jsdelivr.net/ghost/portal@~2.29/umd/portal.min.js" data-i18n="false" data-ghost="https://www.theuilab.co/" data-key="dd1aa13c5fa2a25d25457e722a" data-api="https://gareth.ghost.io/ghost/api/content/" crossorigin="anonymous"></script><style id="gh-members-styles">.gh-post-upgrade-cta-content,
+.gh-post-upgrade-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+    width: 100%;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.gh-post-upgrade-cta-content {
+    border-radius: 8px;
+    padding: 40px 4vw;
+}
+
+.gh-post-upgrade-cta h2 {
+    color: #ffffff;
+    font-size: 28px;
+    letter-spacing: -0.2px;
+    margin: 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta p {
+    margin: 20px 0 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta small {
+    font-size: 16px;
+    letter-spacing: -0.2px;
+}
+
+.gh-post-upgrade-cta a {
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a:hover {
+    color: #ffffff;
+    opacity: 0.8;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a.gh-btn {
+    display: block;
+    background: #ffffff;
+    text-decoration: none;
+    margin: 28px 0 0;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.gh-post-upgrade-cta a.gh-btn:hover {
+    opacity: 0.92;
+}</style><script async src="https://js.stripe.com/v3/"></script>
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="dd1aa13c5fa2a25d25457e722a" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://gareth.ghost.io/" crossorigin="anonymous"></script>
+    
+    <link href="https://www.theuilab.co/webmentions/receive/" rel="webmention" />
+    <script defer src="../public/cards.min%EF%B9%96v=ac8ff0cc47.js"></script>
+    <link rel="stylesheet" type="text/css" href="../public/cards.min%EF%B9%96v=ac8ff0cc47.css">
+    <script defer src="../public/member-attribution.min%EF%B9%96v=ac8ff0cc47.js"></script>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVC3N5X7W3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YVC3N5X7W3');
+</script>
+
+<style>.site-head-logo{
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    }
+</style>
+
+<style>.header__brand img{
+    height:40px;
+    }
+</style>
+
+<meta name="theme-color" content="#1A1F22">
+
+
+<!-- Hotjar Tracking Code for https://www.theuilab.co -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:3247598,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+
+<style>.welcome {
+        min-height:360px;
+        background-color: transparent;
+    }
+    
+    .has-bg{
+        background-color: transparent;
+    }
+   
+    
+    .welcome__title{
+        font-size:3rem;
+    }
+    
+:root {
+
+ --global-radius: 0px;
+    }
+    
+    .kg-button-card a.kg-btn {
+            border-radius: 1px;
+    }
+    
+    .btn--gradient:before {
+ background: linear-gradient(135deg,rgba(210,50,79,1),rgba(210,50,79,1));
+    }
+</style>
+
+<style>:root {--ghost-accent-color: #D2324F;}</style>
+  </head>
+  <body class="post-template tag-figma tag-blog" data-hero-image="">
+    <div class="progress-bar"></div>
+    
+      <header class="header js-header" data-header="normal">
+  <div class="container wrapper flex is-rel header__inner">
+<a class="header__brand" href="../index.html">        <picture class="">
+  <source 
+    srcset="../content/images/size/w300/format/webp/2023/03/uilab-logo.svg.webp 300w,"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="header__logo"
+    data-srcset="../content/images/2023/03/uilab-logo.svg 300w,"
+    srcset="../content/images/2023/03/uilab-logo.svg"
+    data-sizes="auto"
+    data-src="../content/images/2023/03/uilab-logo.svg"
+    src="../content/images/2023/03/uilab-logo.svg"
+    alt="The UI Lab"
+    loading="eager"
+  >
+</picture></a>
+    <nav class="header__menu items-center">
+      <ul class="nav">
+    <li class="nav-home" 
+      data-label="Home" data-length="4">
+      <a href="../index.html">
+        <span>Home</span>
+      </a>
+    </li>
+    <li class="nav-about" 
+      data-label="About" data-length="5">
+      <a href="../about/index.html">
+        <span>About</span>
+      </a>
+    </li>
+</ul>
+
+        <div class="header__menu--sub items-center">
+          <button class="header__menu--more is-mainitem" aria-label="Menu"><i class="icon icon-dots">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-dots" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <circle cx="5" cy="12" r="1"></circle>
+  <circle cx="12" cy="12" r="1"></circle>
+  <circle cx="19" cy="12" r="1"></circle>
+</svg>
+</i></button>
+          <ul class="nav secondary submenu">
+    <li class="nav-privacy" 
+      data-label="Privacy" data-length="7">
+      <a href="../privacy/index.html">
+        <span>Privacy</span>
+      </a>
+    </li>
+    <li class="nav-terms" 
+      data-label="Terms" data-length="5">
+      <a href="../terms/index.html">
+        <span>Terms</span>
+      </a>
+    </li>
+    <li class="nav-contact" 
+      data-label="Contact" data-length="7">
+      <a href="../contact/index.html">
+        <span>Contact</span>
+      </a>
+    </li>
+    <li class="nav-natural-ui-wip" 
+      data-label="Natural UI (WIP)" data-length="16">
+      <a href="../laws-of-natural-ui/index.html">
+        <span>Natural UI (WIP)</span>
+      </a>
+    </li>
+</ul>
+        </div>
+    </nav>
+
+    <span class="header--spacer"></span>
+
+    <button class="btn-toggle header-search__toggle" data-ghost-search title="Search" aria-label="Search">
+      <i class="icon icon-search">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+</i>    </button>
+
+        <a href="../signup/index.html" class="btn signup-link btn--brand radius" data-portal="signup">Subscribe</a>
+      
+
+    <div class="member-menu js-member-menu">
+      <a href="../signup/index.html" data-portal="signup" class="signup-link">
+        <i class="icon icon-arrow-up-right icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-up-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <line x1="17" y1="7" x2="7" y2="17" />
+  <polyline points="8 7 17 7 17 16" />
+</svg>
+
+
+
+</i>Sign up
+      </a>
+
+      <a href="../signin/index.html" data-portal="signin" class="signin-link">
+        <i class="icon icon-login icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-in">
+  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+  <polyline points="10 17 15 12 10 7"></polyline>
+  <line x1="15" y1="12" x2="3" y2="12"></line>
+</svg>
+</i>Sign in
+      </a>
+</div>
+    <button class="btn-toggle menu__toggle js-menu-open"
+      type="button" title="Menu" aria-label="Menu">
+        <span></span>
+        <span></span>
+    </button>
+  </div>
+</header>
+
+
+      <div class="menu js-menu">
+  <div class="menu__header flex content-end">
+    <button class="btn-toggle menu__toggle is-active js-menu-close"
+      type="button" title="Menu" aria-label="Menu">
+        <span></span>
+        <span></span>
+    </button>
+  </div>
+
+  <nav class="menu__navigation">
+    <ul class="nav">
+    <li class="nav-home" 
+      data-label="Home" data-length="4">
+      <a href="../index.html">
+        <span>Home</span>
+      </a>
+    </li>
+    <li class="nav-about" 
+      data-label="About" data-length="5">
+      <a href="../about/index.html">
+        <span>About</span>
+      </a>
+    </li>
+</ul>
+
+      <ul class="nav secondary submenu">
+    <li class="nav-privacy" 
+      data-label="Privacy" data-length="7">
+      <a href="../privacy/index.html">
+        <span>Privacy</span>
+      </a>
+    </li>
+    <li class="nav-terms" 
+      data-label="Terms" data-length="5">
+      <a href="../terms/index.html">
+        <span>Terms</span>
+      </a>
+    </li>
+    <li class="nav-contact" 
+      data-label="Contact" data-length="7">
+      <a href="../contact/index.html">
+        <span>Contact</span>
+      </a>
+    </li>
+    <li class="nav-natural-ui-wip" 
+      data-label="Natural UI (WIP)" data-length="16">
+      <a href="../laws-of-natural-ui/index.html">
+        <span>Natural UI (WIP)</span>
+      </a>
+    </li>
+</ul>
+  </nav>
+
+  <div class="menu__actions flex w-100">
+        <a href="../signin/index.html" data-portal="signin" class="btn signin-link btn--bordered radius m-r">
+          Log in
+        </a>
+        <a href="../signup/index.html" data-portal="signup" class="btn signup-link btn--brand radius">
+          Subscribe
+        </a>
+  </div>
+</div>
+    <main class="main">
+      
+
+  <div class="container wrapper">
+  
+    <div class="post-hero is-post" 
+  data-feature-image="true" data-image-style="resource">
+  
+  <div class="post-hero__content flex flex-col">
+    <h1 class="post-hero__title">6 Figma Features That Will Save You a Ton of Time</h1>
+   
+
+      <div class="post-info text-acc m-t"> 
+  <ul class="post-info__avatars">
+      <li class="author-avatar has-image">
+        <a href="../author/gareth/index.html" title="Gareth" aria-label="Gareth">
+            <picture class="">
+  <source 
+    data-srcset="../content/images/size/w30/format/webp/2022/11/1585779806641.jpeg.webp 30w,../content/images/size/w100/format/webp/2022/11/1585779806641.jpeg.webp 100w,"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="lazyload"
+    data-srcset="../content/images/size/w30/2022/11/1585779806641.jpeg 30w,../content/images/size/w100/2022/11/1585779806641.jpeg 100w,"
+    srcset="../content/images/size/w30/2022/11/1585779806641.jpeg"
+    data-sizes="auto"
+    data-src="../content/images/size/w100/2022/11/1585779806641.jpeg"
+    src="../content/images/size/w30/2022/11/1585779806641.jpeg"
+    alt="Gareth"
+    
+  >
+</picture>        </a>
+      </li>
+  </ul>
+  <div class="post-info__detail">
+    <span class="post-info__author"><a href="../author/gareth/index.html">Gareth</a></span>
+    <div class="post-info__dr">
+      <time datetime="2022-11-10">Nov 10, 2022</time> 
+      <span class="post-info__readtime">7 min read</span>
+    </div>
+  </div>
+</div>  </div>
+
+    <div class="post-hero__media">
+      <figure class="post-hero__figure">
+        <picture class="">
+  <source 
+    data-srcset="../content/images/size/w300/format/webp/2022/11/Figma-Timesavers-5.png.webp 300w,../content/images/size/w600/format/webp/2022/11/Figma-Timesavers-5.png.webp 600w,../content/images/size/w1000/format/webp/2022/11/Figma-Timesavers-5.png.webp 1000w,../content/images/size/w2000/format/webp/2022/11/Figma-Timesavers-5.png.webp 2000w"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="lazyload post-hero__img"
+    data-srcset="../content/images/size/w300/2022/11/Figma-Timesavers-5.png 300w,../content/images/size/w600/2022/11/Figma-Timesavers-5.png 600w,../content/images/size/w1000/2022/11/Figma-Timesavers-5.png 1000w,../content/images/size/w2000/2022/11/Figma-Timesavers-5.png 2000w"
+    srcset="../content/images/size/w30/2022/11/Figma-Timesavers-5.png"
+    data-sizes="auto"
+    data-src="../content/images/size/w100/2022/11/Figma-Timesavers-5.png"
+    src="../content/images/size/w30/2022/11/Figma-Timesavers-5.png"
+    alt="6 Figma Features That Will Save You a Ton of Time"
+    
+  >
+</picture>        
+      </figure>
+    </div>
+
+</div>
+
+    <article class="post tag-figma tag-blog content post-access-public">
+      <p>I was intimidated the first time I had to use Figma. Before Figma, my UI design world existed within Sketch, Adobe XD, even sometimes Adobe Illustrator.</p><p>Figma was a completely different way of doing things; all the panels and tools were in different places, it almost felt <em>empty </em>in a way, not to mention all of the sudden I was designing collaboratively live with other people.</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/11/looking-around.gif" class="kg-image" alt loading="lazy" width="498" height="247"><figcaption>Hey uh. Where are the text tools?</figcaption></figure><p>Over time, I've learned a lot of the hidden and nuanced functionality built into Figma that makes design a <em>lot </em>easier. Almost exclusively because of all the little things, I went from being a skeptical adopter to a strong advocate.</p><p><strong>These are some of my favorite hidden or semi-hidden functionalities that I use all the time:</strong></p><ol><li>Use an 8 point grid</li><li>Change the nudge size to match your grid</li><li>Use the special Paste tools</li><li>Quick-select an object within a group</li><li>Use Selection Colors to change all instances of a color</li><li>Copy and paste layer effects</li></ol><h2 id="use-a-grid-or-layout-system">Use a grid or layout system</h2><p>The basic principle of using a grid is to use a multiple of a single number to dictate all sizing, spacing, padding, margins. </p><p><strong>I'm a big fan of 8pt grid </strong>- it's very commonly used and friendly to many common screen sizes.</p><p>This means <strong>all of your sizes, spacing, padding, and margins will be multiples of 8</strong>: (8, 16, 24, 32, 40, 48, and so on.)</p><p>I'll spare you the snobby lecture and hot-take on why true designers do or don't use grids. This is a turtleneck-free zone.</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/11/giphy-5.gif" class="kg-image" alt loading="lazy" width="480" height="270"><figcaption>We get it. Grids are divine.</figcaption></figure><p>In reality, the reasons why you should use a grid aren't actually that complicated. <strong>The benefits of using a grid come down to this:</strong></p><ol><li>Less time spent measuring</li><li>Less guessing and remembering how much padding or spacing to use in new scenarios</li><li>Less time and energy spent "feeling out" what looks good </li><li>Fewer "design typo" type mistakes</li><li>More time spent confidently designing</li></ol><p>Have you ever spent time trying to split a bill up amongst friends in your head, missed something or realized you weren't able to hold one of the numbers in your head, and then had to go back and do it all over again? No one enjoys this process. Not you, not the other people at the table. This is what calculators are for.</p><p>Grids are like calculators for design. They make it easier for you to be consistent when doing common, repetitive, and BORING, but <em>important,</em> stuff — like making your padding and sizing consistent. </p><p>Who wants to spend <em>more</em> time making sure their padding is consistent? No one ever.</p><p>Who messes it up or misses things when they try to do repetitive and focus-intensive tasks manually? Everyone always.</p><p><strong>Here's the thing: you shouldn't feel bad about being inconsistent in the first place, but you <em>should</em> strive to be consistent.</strong></p><p>We are not calculators — we're human beings; we're fleshy, squishy, messy creatures. We <em>use </em>calculators. And we also didn't evolve in symmetrical, digital spaces.</p><p>Our brains just weren't made to accurately create dozens, hundreds, or even thousands of perfectly-spaced objects. When you think about it, it's pretty <em>weird</em>. </p><p>Unless you're some kind of strange and questionable personality, it's hard <em>and</em> it's uninteresting to do this kind of work while maintaining your accuracy, which is a great combo if you want to get less done and hate the time you spent doing it and end up with a lot of mistakes.</p><p>Not to mention if you're the one building what you or someone else designed, you <em>also </em>don't want to be spending your time guessing, measuring, or having to ask the designer every time something isn't clear.</p><p>And this kind of spacing isn't a good look or helpful for anyone:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/11/messy-sizing.png" class="kg-image" alt loading="lazy" width="1754" height="622" srcset="../content/images/size/w600/2022/11/messy-sizing.png 600w, ../content/images/size/w1000/2022/11/messy-sizing.png 1000w, ../content/images/size/w1600/2022/11/messy-sizing.png 1600w, ../content/images/2022/11/messy-sizing.png 1754w" sizes="(min-width: 720px) 720px"></figure><p>13.73 pixels. Nice.</p><p>On the other hand, this is very clean, consistent, and reliable:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/11/clean-sizing.png" class="kg-image" alt loading="lazy" width="2000" height="599" srcset="../content/images/size/w600/2022/11/clean-sizing.png 600w, ../content/images/size/w1000/2022/11/clean-sizing.png 1000w, ../content/images/size/w1600/2022/11/clean-sizing.png 1600w, ../content/images/2022/11/clean-sizing.png 2078w" sizes="(min-width: 720px) 720px"></figure><p><strong>When you design with a system, there's less guesswork in the process for everyone. </strong>That means less time spent doing the type of work that your brain is terrible at not messing up. </p><p>So, use a grid. I recommend using an 8 point grid. You'll be happier for it now <em>and </em>in the future when you come back to your designs, engineers will be happier for it, and your designs will be better.</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/11/200-4.gif" class="kg-image" alt loading="lazy" width="267" height="200"></figure><h2 id="change-your-nudge-and-big-nudge-size-to-match-your-grid-system">Change your nudge and big nudge size to match your grid system</h2><!--kg-card-begin: markdown--><p>In Figma, <code>nudging</code> allows you to move selected elements in predictable intervals by selecting an element and pressing an arrow key.</p>
+<p>A <code>big nudge</code> lets you move things in larger intervals by pressing <code>Shift</code> + any of the arrow keys <code>← → ↑ ↓</code>.</p>
+<!--kg-card-end: markdown--><p><strong>The default big nudge size is 10px.</strong> You can change that, to, say, match your grid size! <strong>I set mine to 8px because I use an 8pt grid, and it makes my life so much easier.</strong></p><p>To change your nudge size:</p><!--kg-card-begin: markdown--><ol>
+<li>Click the <code>Figma menu icon</code></li>
+<li>Select <code>Preferences</code></li>
+<li>All the way at the bottom, select <code>Nudge Amount</code></li>
+</ol>
+<!--kg-card-end: markdown--><ol><li></li></ol><figure class="kg-card kg-image-card"><img src="../content/images/2022/11/change-big-nudge-size.gif" class="kg-image" alt loading="lazy" width="800" height="492" srcset="../content/images/size/w600/2022/11/change-big-nudge-size.gif 600w, ../content/images/2022/11/change-big-nudge-size.gif 800w" sizes="(min-width: 720px) 720px"></figure><p>Once you do this and adopt an 8pt grid system, you will be absolutely <em>flying </em>on your padding and sizing.</p><h2 id="paste-tools-in-figma">Paste tools in Figma</h2><p>Figma has some nifty and useful pasting functionality that were brought in from other tools. They're a nice little speed boost to your workflow, especially if you or your team aren't using a design system.</p><h3 id="paste-here">Paste here</h3><!--kg-card-begin: markdown--><p><code>Paste here</code> lets you paste an object directly where your cursor is, like this:</p>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card"><img src="../content/images/2022/11/paste-here.gif" class="kg-image" alt loading="lazy" width="600" height="395" srcset="../content/images/2022/11/paste-here.gif 600w"></figure><p>I use this all the time when I want to tell Figma <em>exactly </em>where to paste something, without it following another higher-level rule (for example, pasting in the center of the screen.)</p><h3 id="paste-to-replace">Paste to replace </h3><p>This is my absolute favorite. It's both simple and incredibly flexible, and therefore, powerful. Paste to replace allows you to replace selected elements, with elements you copied to the clipboard. </p><p>Here's how you do it:</p><ol><li>Copy the element</li><li>Select element(s) you want to replace</li><li>Past to replace:</li></ol><!--kg-card-begin: markdown--><p><strong>Mac:</strong> <code>CMD</code> <code>Option</code> <code>Shift</code> <code>V</code><br>
+<strong>Windows:</strong> <code>Ctrl</code> <code>Alt</code> <code>Shift</code> <code>V</code></p>
+<!--kg-card-end: markdown--><p>You can do this to replace one element:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/11/paste-to-replace-1.gif" class="kg-image" alt loading="lazy" width="600" height="395" srcset="../content/images/2022/11/paste-to-replace-1.gif 600w"></figure><p>Or several ungrouped elements at once, which is a <em>massive </em>time-saver:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/11/paste-to-replace-multiple.gif" class="kg-image" alt loading="lazy" width="600" height="395" srcset="../content/images/2022/11/paste-to-replace-multiple.gif 600w"></figure><p>The more you use this one, the more you'll find creative ways to save you time. It's great.</p><h2 id="select-objects-within-a-group">Select Objects Within a Group</h2><p>When you have a lot of grouped objects, it can be tiresome to double-click your way into selecting the element you want. Fortunately, there's a shortcut.</p><!--kg-card-begin: markdown--><p>All you have to do is hold <code>Cmd</code> if you're on Mac, or <code>Ctrl</code> if you're on Windows.</p>
+<!--kg-card-end: markdown--><p>Check it out:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/11/select-within-group.gif" class="kg-image" alt loading="lazy" width="600" height="406" srcset="../content/images/2022/11/select-within-group.gif 600w"></figure><p></p><h2 id="use-selection-colors-to-speed-run-mass-color-changes">Use Selection Colors to speed-run mass color changes</h2><p>I love this one. Especially if you're not using a design system, the ability to quickly change colors of multiple ungrouped elements on the fly is huge. This means you can adjust multiple elements at the same time, without having to select each one individually: </p><figure class="kg-card kg-image-card"><img src="../content/images/2022/11/selection-colors.gif" class="kg-image" alt loading="lazy" width="600" height="375" srcset="../content/images/2022/11/selection-colors.gif 600w"></figure><p>On a larger scale, it means you can select a frame and change every instance of that color on the whole screen:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/11/selection-colors-frame.gif" class="kg-image" alt loading="lazy" width="600" height="468" srcset="../content/images/2022/11/selection-colors-frame.gif 600w"></figure><p>So much time saved by not going into each element and changing its color. The next major level up of this boost is to use a design system, which I'll cover in another lesson.</p><p>And that brings me to the final tip for this list:</p><h2 id="copy-and-paste-layer-effects">Copy and Paste Layer Effects</h2><p>Layer effects are things like drop shadows, background blurs, layer blurs, and so on. They're useful and common in UI design, so it's valuable to know how to reproduce them quickly without having to remake them or remember your custom values.</p><p>Once again, you can actually save and reuse layer styles by creating a Figma library (aka reusable design system,) but for the purpose of this post I'll show you how to quickly copy and paste them across elements.</p><p><strong>All you have to do to paste layer effects is is:</strong></p><!--kg-card-begin: markdown--><ol>
+<li>Select the layer whose styles you want to copy</li>
+<li>Click the space just to the left of the effect you want to copy (you can use <code>Shift</code> + <code>click</code> to select multiple)</li>
+<li>Use <code>Cmd/Ctrl</code> + <code>C</code> to copy the effect</li>
+<li>Select the new layer, and use <code>Cmd/Ctrl</code> + <code>V</code> to paste the effect onto it</li>
+</ol>
+<!--kg-card-end: markdown--><p><strong>Which looks like this:</strong></p><figure class="kg-card kg-image-card"><img src="../content/images/2022/11/paste-layer-effects.gif" class="kg-image" alt loading="lazy" width="600" height="384" srcset="../content/images/2022/11/paste-layer-effects.gif 600w"></figure><!--kg-card-begin: markdown--><p>You can also copy and paste layer effects via the <code>right click menu</code> or by using <code>Cmd/Ctrl</code> + <code>Option/Alt</code> + <code>C</code> and <code>Cmd/Ctrl</code> + <code>Option/Alt</code> + <code>V</code>. It's worth noting, however, that this will also copy other properties like corner radius:</p>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card"><img src="../content/images/2022/11/copy-effects-right-click.gif" class="kg-image" alt loading="lazy" width="600" height="373" srcset="../content/images/2022/11/copy-effects-right-click.gif 600w"></figure><p>I use all of these almost every single day doing design work. Figma is loaded with a ton of optimizations like this, so dig around, try things, and you may discover even more little powerups to your workflow.</p><p>For now, I hope this has been helpful to you in your UI design journey!</p><p>⚡</p><p><em>Was this article helpful? You can support me by <a href="https://www.buymeacoffee.com/uilab?ref=theuilab.co">buying me a coffee</a>! (I love coffee.)</em></p>
+    </article>
+
+          <div class="post-tags content-width">
+        <a href="../tag/figma/index.html" style="--color-accent:#F24E1E;">Figma</a>
+        <a href="../tag/blog/index.html" >Blog</a>
+    </div>
+
+        <div class="social-share content-width m-b-xl">
+  <a class="social-share__item twitter js-share" target="_blank"
+      href="https://twitter.com/share?text=6%20Figma%20Features%20That%20Will%20Save%20You%20a%20Ton%20of%20Time&amp;url=https://www.theuilab.co/6-figma-timesavers/"
+      title="Share on Twitter" aria-label="Share on Twitter">
+    <i class="icon icon-twitter icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+</i>    <span>Tweet</span>
+  </a>
+  <a class="social-share__item facebook js-share" target="_blank"
+      href="https://www.facebook.com/sharer.php?u=https://www.theuilab.co/6-figma-timesavers/"
+      title="Share on Facebook" aria-label="Share on Facebook">
+    <i class="icon icon-facebook icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-facebook" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3" />
+</svg>
+
+
+
+</i>    <span>Share</span>
+  </a>
+  <a class="social-share__item linkedin js-share" target="_blank"
+      href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://www.theuilab.co/6-figma-timesavers/&amp;title=6%20Figma%20Features%20That%20Will%20Save%20You%20a%20Ton%20of%20Time&amp;summary=6%20Figma%20Features%20That%20Will%20Save%20You%20a%20Ton%20of%20Time"
+      title="Share on Linkedin" aria-label="Share on Linkedin">
+    <i class="icon icon-linkedin icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-linkedin">
+  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+  <rect x="2" y="9" width="4" height="12"></rect>
+  <circle cx="4" cy="4" r="2"></circle>
+</svg>
+</i>    <span>Share</span>
+  </a>
+  <a class="social-share__item mail"
+      href="mailto:?subject=6%20Figma%20Features%20That%20Will%20Save%20You%20a%20Ton%20of%20Time&body=https://www.theuilab.co/6-figma-timesavers/&nbsp;6%20Figma%20Features%20That%20Will%20Save%20You%20a%20Ton%20of%20Time"
+      title="Share by email" aria-label="Share by email">
+    <i class="icon icon-mail icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mail" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <rect x="3" y="5" width="18" height="14" rx="2" />
+  <polyline points="3 7 12 13 21 7" />
+</svg>
+</i>    <span>Email</span>
+  </a>
+  <button class="copy-link copy js-copy-link" data-url="https://www.theuilab.co/6-figma-timesavers/"
+      title="Copy to clipboard" data-label="Copied!" aria-label="Copy to clipboard">
+    <i class="icon icon-copy icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <rect x="8" y="8" width="12" height="12" rx="2" />
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2" />
+</svg>
+</i>    <span>Copy</span>
+  </button>
+</div>
+
+
+      <div class="flex flex-wrap gap-lg m-b-lg">
+        
+              <div class="related-posts radius-double p-lg flex-1 self-align-start">
+        <span class="section-title sm m-b uppercase">Read next</span>
+        <div class="post-list m-b-sm">
+            <a class="post-list-item" href="../make-elements-more-readable/index.html">
+              <h3 class="post-list-item__title">How to Increase Contrast for Accessibility While Staying On-Brand</h3>
+              <i class="icon icon-chevron-right">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <polyline points="9 6 15 12 9 18"></polyline>
+</svg>
+</i>            </a>
+            <a class="post-list-item" href="../create-polished-shadows-in-figma/index.html">
+              <h3 class="post-list-item__title">How to Create a Polished and Professional Figma Dropshadow</h3>
+              <i class="icon icon-chevron-right">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <polyline points="9 6 15 12 9 18"></polyline>
+</svg>
+</i>            </a>
+            <a class="post-list-item" href="../use-the-eyedropper-tool/index.html">
+              <h3 class="post-list-item__title">How to Use the Eyedropper Tool in Figma</h3>
+              <i class="icon icon-chevron-right">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <polyline points="9 6 15 12 9 18"></polyline>
+</svg>
+</i>            </a>
+            <a class="post-list-item" href="../how-to-use-the-figma-color-picker/index.html">
+              <h3 class="post-list-item__title">How To Use the Figma Color Picker</h3>
+              <i class="icon icon-chevron-right">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <polyline points="9 6 15 12 9 18"></polyline>
+</svg>
+</i>            </a>
+            <a class="post-list-item" href="../how-to-use-figma-mirror/index.html">
+              <h3 class="post-list-item__title">How To Use Figma Mirror To Design on Your Phone</h3>
+              <i class="icon icon-chevron-right">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <polyline points="9 6 15 12 9 18"></polyline>
+</svg>
+</i>            </a>
+        </div>
+      </div>
+      </div>
+  </div>
+
+
+
+    </main>
+
+          <section class="container wrapper section cta m-b-0 is-post" >
+      <div class="cta__inner radius-double is-rel w-100 p-t-lg p-b-lg has-img">
+        <div class="cta__content flex flex-col is-rel z-index-1">
+          <h2 class="cta__title">UI design expertise <span>on tap<span></h2>
+          <p id="cta-input-label" class="cta__description opacity-075">Become a better designer in 10 minutes a day. Professional, bite-size design expertise delivered to your inbox.</p>
+          
+              <form class="subscribe-form" 
+  data-members-form="signup" data-style="inline-joined">
+  <input data-members-email class="" 
+    type="email" autocomplete="email" placeholder="Your email address" 
+    aria-labelledby="cta-input-label" required> 
+  <button class="btn btn--brand btn--gradient uppercase" type="submit">
+    <span>Subscribe</span>
+  </button>
+  <div class="msg-success">Great! Check your inbox and click the link.</div>
+  <div class="msg-error">Sorry, something went wrong. Please try again.</div>
+</form>        </div>
+        
+          <figure class="cta__media">
+            <picture class="">
+  <source 
+    data-srcset="../content/images/size/w300/format/webp/2023/03/Frame-41.png.webp 300w,../content/images/size/w600/format/webp/2023/03/Frame-41.png.webp 600w,../content/images/size/w1000/format/webp/2023/03/Frame-41.png.webp 1000w,../content/images/size/w2000/format/webp/2023/03/Frame-41.png.webp 2000w"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="lazyload cta__img"
+    data-srcset="../content/images/size/w300/2023/03/Frame-41.png 300w,../content/images/size/w600/2023/03/Frame-41.png 600w,../content/images/size/w1000/2023/03/Frame-41.png 1000w,../content/images/size/w2000/2023/03/Frame-41.png 2000w"
+    srcset="../content/images/size/w30/2023/03/Frame-41.png"
+    data-sizes="auto"
+    data-src="../content/images/size/w100/2023/03/Frame-41.png"
+    src="../content/images/size/w30/2023/03/Frame-41.png"
+    alt="The UI Lab"
+    
+  >
+</picture>          </figure>
+      </div>
+    </section>
+      
+      <footer class="footer">
+  <div class="container wrapper">
+    <div class="row m-b">
+      <div class="col-xs-12 col-md-4">
+        <div class="footer__brand flex items-center">
+            <picture class="">
+  <source 
+    data-srcset="../content/images/size/w300/format/webp/2023/03/uilab-logo.svg.webp 300w,"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="footer__logo m-r lazyload"
+    data-srcset="../content/images/2023/03/uilab-logo.svg 300w,"
+    srcset="../content/images/2023/03/uilab-logo.svg"
+    data-sizes="auto"
+    data-src="../content/images/2023/03/uilab-logo.svg"
+    src="../content/images/2023/03/uilab-logo.svg"
+    alt="The UI Lab"
+    
+  >
+</picture>        </div>
+
+        <div class="footer__description" id="footer-input-label">
+          Quick tutorials for UI design mastery.
+        </div>
+
+              <form class="subscribe-form radius-rounded m-b" 
+  data-members-form="subscribe" data-style="inline-joined">
+  <input data-members-email class="w-100 radius-rounded" 
+    type="email" autocomplete="email" placeholder="Your email address" 
+    aria-labelledby="footer-input-label" required> 
+  <button class="btn btn--primary radius-rounded" type="submit">
+    <span>Subscribe</span>
+  </button>
+  <div class="msg-success">Great! Check your inbox and click the link.</div>
+  <div class="msg-error">Sorry, something went wrong. Please try again.</div>
+</form>      </div>
+
+      <div class="col-xs-12 col-md-4 m-b footer-nav">
+        <span class="fw-700 m-b-sm display-block text-acc">Navigation</span>
+        <div class="grid col-2">
+          <ul class="nav">
+    <li class="nav-home" 
+      data-label="Home" data-length="4">
+      <a href="../index.html">
+        <span>Home</span>
+      </a>
+    </li>
+    <li class="nav-about" 
+      data-label="About" data-length="5">
+      <a href="../about/index.html">
+        <span>About</span>
+      </a>
+    </li>
+</ul>
+
+            <ul class="nav secondary submenu">
+    <li class="nav-privacy" 
+      data-label="Privacy" data-length="7">
+      <a href="../privacy/index.html">
+        <span>Privacy</span>
+      </a>
+    </li>
+    <li class="nav-terms" 
+      data-label="Terms" data-length="5">
+      <a href="../terms/index.html">
+        <span>Terms</span>
+      </a>
+    </li>
+    <li class="nav-contact" 
+      data-label="Contact" data-length="7">
+      <a href="../contact/index.html">
+        <span>Contact</span>
+      </a>
+    </li>
+    <li class="nav-natural-ui-wip" 
+      data-label="Natural UI (WIP)" data-length="16">
+      <a href="../laws-of-natural-ui/index.html">
+        <span>Natural UI (WIP)</span>
+      </a>
+    </li>
+</ul>
+        </div>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-2 m-b">
+              <span class="fw-700 m-b-sm display-block text-acc">Resources</span>
+              <ul class="nav">
+                  <li><a href="../tag/accessibility/index.html">Accessibility</a></li>
+                  <li><a href="../tag/color/index.html">Color</a></li>
+                  <li><a href="../tag/paywall-design/index.html">Paywall Design</a></li>
+                  <li><a href="../tag/visual-design/index.html">Visual Design</a></li>
+                  <li><a href="../tag/figma/index.html">Figma</a></li>
+              </ul>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-2 m-b">
+        <span class="fw-700 m-b-sm display-block text-acc">Social</span>
+        <div class="social-links flex flex-col">
+          
+
+<a href="../rss/index.rss" class="rss" aria-label="RSS"><i class="icon icon-rss icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rss" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <circle cx="5" cy="19" r="1" />
+  <path d="M4 4a16 16 0 0 1 16 16" />
+  <path d="M4 11a9 9 0 0 1 9 9" />
+</svg>
+
+
+
+</i><span>RSS</span></a>
+
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <div class="footer__copy">
+        <span>&copy;2023&nbsp;<a href="../index.html">The UI Lab</a>.</span>
+        <span>Published with&nbsp;<a href="https://ghost.org">Ghost</a>&nbsp;&&nbsp;<a href="https://bironthemes.com/themes/rinne-ghost/">Rinne</a>.</span>
+      </div>
+
+      <div class="color-scheme flex flex-cc radius-half">
+  <div class="color-scheme-symbol">
+    <span class="accent-bg"></span>
+  </div>
+  <select class="color-scheme-select radius-half js-color-scheme-select" aria-label="Change color scheme">
+    <option value="system" selected>System</option>
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+  <i class="icon icon-select">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-select" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M17 8.517L12 3 7 8.517M7 15.48l5 5.517 5-5.517"></path>
+</svg>
+
+
+
+</i></div>    </div>
+
+  </div>
+</footer>
+
+    <dialog class="notification">
+  <i class="icon icon-success notification-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M9 12l2 2l4 -4" />
+</svg>
+
+
+
+</i>  <i class="icon icon-error notification-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alert-octagon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M8.7 3h6.6c.3 0 .5 .1 .7 .3l4.7 4.7c.2 .2 .3 .4 .3 .7v6.6c0 .3 -.1 .5 -.3 .7l-4.7 4.7c-.2 .2 -.4 .3 -.7 .3h-6.6c-.3 0 -.5 -.1 -.7 -.3l-4.7 -4.7c-.2 -.2 -.3 -.4 -.3 -.7v-6.6c0 -.3 .1 -.5 .3 -.7l4.7 -4.7c.2 -.2 .4 -.3 .7 -.3z" />
+  <line x1="12" y1="8" x2="12" y2="12" />
+  <line x1="12" y1="16" x2="12.01" y2="16" />
+</svg>
+
+
+
+</i>  <i class="icon icon-warning notification-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alert-triangle" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M12 9v2m0 4v.01" />
+  <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75" />
+</svg>
+
+
+
+</i>  <p class="notification-msg signup-success">Great! You’ve successfully signed up.</p> 
+  <p class="notification-msg signin-success">Welcome back! You&#x27;ve successfully signed in.</p> 
+  <p class="notification-msg subscribe-success">You&#x27;ve successfully subscribed to The UI Lab.</p> 
+  <p class="notification-msg link-expired">Your link has expired.</p> 
+  <p class="notification-msg checkout-success">Success! Check your email for magic link to sign-in.</p> 
+  <p class="notification-msg billing-success">Success! Your billing info has been updated.</p> 
+  <p class="notification-msg billing-cancel">Your billing was not updated.</p> 
+  <button class="notification-close js-notification-close" aria-label="Close" onclick="closeNotification(event.currentTarget.parentNode);">
+    <i class="icon icon-x">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+</svg>
+</i>  </button>
+</dialog>
+
+      
+    
+
+    
+
+      <script>
+    // Copy button
+    const copyBtn = document.querySelector('.js-copy-link');
+    if (copyBtn) {
+      copyBtn.onclick = function(event) {
+        copyToClipboard(event.currentTarget, event.currentTarget.getAttribute('data-url'));
+      }
+    }
+    
+    /** 
+    * Copy to clipboard
+    * @src - source element
+    * @str - string to copy
+    */ 
+    const copyToClipboard = function(src, str) {
+      const el = document.createElement('textarea');
+      el.value = str;
+      el.setAttribute('readonly', '');
+      el.style.position = 'absolute';
+      el.style.left = '-9999px';
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+
+      src.classList.add('has-tooltip');
+      src.setAttribute('data-label', 'Copied!');
+
+      src.onmouseleave = function() { 
+        src.classList.remove('has-tooltip');
+        setTimeout(function(){
+          src.setAttribute('data-label', '');
+        }, 500); 
+      }
+    };
+  </script>
+
+<script>
+  const navItems = document.querySelectorAll('.header .nav:not(.submenu) li')
+  const allNavItems = document.querySelectorAll('.is-subitem')
+
+  // Remove '-' signs
+  allNavItems.forEach(item => {
+    const itemName = item.querySelector('a span')
+    itemName.innerText = itemName.innerText.slice(1)
+  });
+
+  // Add subitems in place
+  let subMenu, hasItems
+  navItems.forEach((item, index) => {
+    if (item.classList.contains('is-subitem') && !navItems[index - 1].classList.contains('is-subitem')) navItems[index - 1].classList.add('is-mainitem'); 
+    subMenu = item.classList.contains('is-subitem') ? subMenu : document.createElement('ul');
+    if (item.classList.contains('is-subitem')) { 
+      subMenu.appendChild(item)
+      subMenu.classList.add('nav','submenu')
+    } else { 
+      item.appendChild(subMenu)
+    }
+  });
+</script>
+
+  <script>
+    // Give the parameter a variable name
+    const qsParams = new URLSearchParams(window.location.search);
+    const isAction = qsParams.has('action');
+    const isStripe = qsParams.has('stripe');
+    const success = qsParams.get('success');
+    const action = qsParams.get('action');
+    const stripe = qsParams.get('stripe');
+
+    if (qsParams && isAction) {
+      if (success === "true") {
+        switch (action) {
+          case 'subscribe':
+            openNotification('subscribe-success');
+            break;
+          case 'signup': 
+            openNotification('signup-success');
+            break;
+          case 'signin':
+            openNotification('signin-success');
+            break;
+          default:
+            break;
+        }
+      } else {
+        openNotification('link-expired');
+      }
+    }
+
+    if (qsParams && isStripe) {
+      switch (stripe) {
+        case 'success':
+          openNotification('checkout-success');
+          break;
+        case 'billing-update-success':
+          openNotification('billing-success');
+          break;
+        case 'billing-update-cancel':
+          openNotification('billing-cancel');
+          break;
+        default:
+          break;
+      }
+    }
+
+    /**
+    * Handle Notifications
+    */
+    function openNotification(type) {
+      const notification = document.querySelector('dialog.notification');
+      if (notification) { 
+        notification.setAttribute('data-msg-type', type);
+        notification.show();
+        setTimeout(function(){ closeNotification(notification); }, 3000);
+      }
+    }
+    
+    /**
+    * Clean URI
+    */
+    function clearURI() {
+      window.history.replaceState({}, '', `${window.location.pathname}`);
+    }
+
+    function closeNotification(notification) {
+      notification.close();
+      clearURI();
+      setTimeout(function(){ notification.removeAttribute('data-msg-type') }, 500);
+    }
+  </script>
+
+
+    
+  </body>
+</html>

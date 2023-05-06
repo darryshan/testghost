@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en" data-color-scheme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>How to Use Figma Mirror to Design on Your Phone – The UI Lab</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="theme-color" content="#D2324F">
+
+
+    <link rel="preload" href="../assets/dist/app.min%EF%B9%96v=ac8ff0cc47.js" as="script">
+    <link rel="preload" href="../assets/dist/app.min%EF%B9%96v=ac8ff0cc47.css" as="style">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+
+    <link rel="preload stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&amp;display=swap" 
+          as="style" onload="this.onload=null;this.rel='stylesheet'" crossorigin>
+    <style>body { --font-body: 'Figtree', sans-serif; --font-headings: 'Figtree', sans-serif; }</style>
+
+
+
+
+
+
+
+    <script async defer src="../assets/dist/app.min%EF%B9%96v=ac8ff0cc47.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../assets/dist/app.min%EF%B9%96v=ac8ff0cc47.css">
+
+    <style>:root {
+    --global-max-width: 1320px; /* site max width */
+    --global-content-width: 680px; /* post-content-width */
+    --global-wide-width: 960px; /* site max width */
+    --global-post-hero-content-max-width: 768px;
+    --global-radius: 5px; /* default radius */
+    --global-gallery-gap: 1em; /* Image gallery distance between images */
+    --global-hyphens: none; /* none/auto */
+    --global-header-height: 72px;
+    --global-theme-notifications: visible; /* visible/hidden */
+    --global-progress-bar: visible; /* visible/hidden */
+    --global-content-preview-fading: 0%; /* 50%-100% for fading effect */
+    --global-hero-img-filter: ;
+    --global-scroll-behavior: auto;
+  }
+</style>
+
+<script>
+  let preferredTheme = localStorage.getItem('PREFERRED_COLOR_SCHEME') || `light`;
+  document.documentElement.setAttribute('data-color-scheme', preferredTheme);
+  
+  // Global values needed
+  const themeGlobal = {
+    currentPage: parseInt(''),
+    nextPage: parseInt(''),
+    nextPageLink: '',
+    maxPages: parseInt(''), 
+    lastPage: `` === `` ? true : false,
+    postsPerPage: parseInt('24'),
+    scrollPos: 0,
+    imageLightbox: `true` === `true` ? true : false
+  }
+
+  // Calculate contrast & HSL value;
+  function getBrandColorInfo(hexcolor) {
+    // get contrast
+    if (hexcolor.slice(0, 1) === '#') { hexcolor = hexcolor.slice(1); }
+    if (hexcolor.length === 3) { hexcolor = hexcolor.split('').map(function (hex) { return hex + hex;}).join(''); }
+    let r = parseInt(hexcolor.substr(0,2),16), g = parseInt(hexcolor.substr(2,2),16), b = parseInt(hexcolor.substr(4,2),16);
+    let yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    const colorContrast = (yiq >= 128) ? '#000' : '#fff';
+
+    //get HSL
+    r /= 255, g /= 255, b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min)  /  2;  
+    if ( max == min ) { h = s = 0; } else {
+      let d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch(max){
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h /= 6;
+    }
+    const colorHSL = [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
+
+    // return
+    return { colorContrast, colorHSL }
+  };
+
+  const brandColor = getBrandColorInfo("#D2324F");
+  let style = document.createElement('style');
+  style.innerHTML = `:root { 
+    --color-brand-contrast: ${brandColor.colorContrast}; 
+    --color-brand-h: ${brandColor.colorHSL[0]};
+    --color-brand-s: ${brandColor.colorHSL[1]}%;
+    --color-brand-l: ${brandColor.colorHSL[2]}%;
+    --color-brand-hsl: ${brandColor.colorHSL[0]} ${brandColor.colorHSL[1]}% ${brandColor.colorHSL[2]}%;
+  }`
+  document.getElementsByTagName('head')[0].appendChild(style);
+</script>
+
+    
+    
+     
+
+    <meta name="description" content="Start designing on your phone in real-time with Figma with this quick and easy tutorial." />
+    <link rel="icon" href="../content/images/size/w256h256/2023/03/uilab-1.png" type="image/png" />
+    <link rel="canonical" href="index.html" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="The UI Lab" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="How to Use Figma Mirror to Design on Your Phone – The UI Lab" />
+    <meta property="og:description" content="And why using Figma on your phone will improve your UI design." />
+    <meta property="og:url" content="https://www.theuilab.co/how-to-use-figma-mirror/" />
+    <meta property="og:image" content="https://www.theuilab.co/content/images/2022/11/FIGMA-MIRROR.png" />
+    <meta property="article:published_time" content="2022-11-02T16:13:34.000Z" />
+    <meta property="article:modified_time" content="2022-11-15T02:31:41.000Z" />
+    <meta property="article:tag" content="Figma" />
+    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="How to Use Figma Mirror to Design on Your Phone – The UI Lab" />
+    <meta name="twitter:description" content="And why using Figma on your phone will improve your UI design." />
+    <meta name="twitter:url" content="https://www.theuilab.co/how-to-use-figma-mirror/" />
+    <meta name="twitter:image" content="https://www.theuilab.co/content/images/2022/11/FIGMA-MIRROR.png" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Gareth" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Figma" />
+    <meta property="og:image:width" content="1600" />
+    <meta property="og:image:height" content="1200" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "The UI Lab",
+        "url": "https://www.theuilab.co/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.theuilab.co/content/images/2023/03/uilab-logo.svg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Gareth",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://www.theuilab.co/content/images/2022/11/1585779806641.jpeg",
+            "width": 800,
+            "height": 800
+        },
+        "url": "../author/gareth/index.html",
+        "sameAs": []
+    },
+    "headline": "How to Use Figma Mirror to Design on Your Phone – The UI Lab",
+    "url": "https://www.theuilab.co/how-to-use-figma-mirror/",
+    "datePublished": "2022-11-02T16:13:34.000Z",
+    "dateModified": "2022-11-15T02:31:41.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://www.theuilab.co/content/images/2022/11/FIGMA-MIRROR.png",
+        "width": 1600,
+        "height": 1200
+    },
+    "keywords": "Figma",
+    "description": "And why using Figma on your phone will improve your UI design.",
+    "mainEntityOfPage": "https://www.theuilab.co/how-to-use-figma-mirror/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.46" />
+    <link rel="alternate" type="application/rss+xml" title="The UI Lab" href="../rss/index.rss" />
+    <script defer src="https://cdn.jsdelivr.net/ghost/portal@~2.29/umd/portal.min.js" data-i18n="false" data-ghost="https://www.theuilab.co/" data-key="dd1aa13c5fa2a25d25457e722a" data-api="https://gareth.ghost.io/ghost/api/content/" crossorigin="anonymous"></script><style id="gh-members-styles">.gh-post-upgrade-cta-content,
+.gh-post-upgrade-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+    width: 100%;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.gh-post-upgrade-cta-content {
+    border-radius: 8px;
+    padding: 40px 4vw;
+}
+
+.gh-post-upgrade-cta h2 {
+    color: #ffffff;
+    font-size: 28px;
+    letter-spacing: -0.2px;
+    margin: 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta p {
+    margin: 20px 0 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta small {
+    font-size: 16px;
+    letter-spacing: -0.2px;
+}
+
+.gh-post-upgrade-cta a {
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a:hover {
+    color: #ffffff;
+    opacity: 0.8;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a.gh-btn {
+    display: block;
+    background: #ffffff;
+    text-decoration: none;
+    margin: 28px 0 0;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.gh-post-upgrade-cta a.gh-btn:hover {
+    opacity: 0.92;
+}</style><script async src="https://js.stripe.com/v3/"></script>
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="dd1aa13c5fa2a25d25457e722a" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://gareth.ghost.io/" crossorigin="anonymous"></script>
+    
+    <link href="https://www.theuilab.co/webmentions/receive/" rel="webmention" />
+    <script defer src="../public/cards.min%EF%B9%96v=ac8ff0cc47.js"></script>
+    <link rel="stylesheet" type="text/css" href="../public/cards.min%EF%B9%96v=ac8ff0cc47.css">
+    <script defer src="../public/member-attribution.min%EF%B9%96v=ac8ff0cc47.js"></script>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVC3N5X7W3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YVC3N5X7W3');
+</script>
+
+<style>.site-head-logo{
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    }
+</style>
+
+<style>.header__brand img{
+    height:40px;
+    }
+</style>
+
+<meta name="theme-color" content="#1A1F22">
+
+
+<!-- Hotjar Tracking Code for https://www.theuilab.co -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:3247598,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+
+<style>.welcome {
+        min-height:360px;
+        background-color: transparent;
+    }
+    
+    .has-bg{
+        background-color: transparent;
+    }
+   
+    
+    .welcome__title{
+        font-size:3rem;
+    }
+    
+:root {
+
+ --global-radius: 0px;
+    }
+    
+    .kg-button-card a.kg-btn {
+            border-radius: 1px;
+    }
+    
+    .btn--gradient:before {
+ background: linear-gradient(135deg,rgba(210,50,79,1),rgba(210,50,79,1));
+    }
+</style>
+
+<style>:root {--ghost-accent-color: #D2324F;}</style>
+  </head>
+  <body class="post-template tag-figma" data-hero-image="">
+    <div class="progress-bar"></div>
+    
+      <header class="header js-header" data-header="normal">
+  <div class="container wrapper flex is-rel header__inner">
+<a class="header__brand" href="../index.html">        <picture class="">
+  <source 
+    srcset="../content/images/size/w300/format/webp/2023/03/uilab-logo.svg.webp 300w,"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="header__logo"
+    data-srcset="../content/images/2023/03/uilab-logo.svg 300w,"
+    srcset="../content/images/2023/03/uilab-logo.svg"
+    data-sizes="auto"
+    data-src="../content/images/2023/03/uilab-logo.svg"
+    src="../content/images/2023/03/uilab-logo.svg"
+    alt="The UI Lab"
+    loading="eager"
+  >
+</picture></a>
+    <nav class="header__menu items-center">
+      <ul class="nav">
+    <li class="nav-home" 
+      data-label="Home" data-length="4">
+      <a href="../index.html">
+        <span>Home</span>
+      </a>
+    </li>
+    <li class="nav-about" 
+      data-label="About" data-length="5">
+      <a href="../about/index.html">
+        <span>About</span>
+      </a>
+    </li>
+</ul>
+
+        <div class="header__menu--sub items-center">
+          <button class="header__menu--more is-mainitem" aria-label="Menu"><i class="icon icon-dots">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-dots" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <circle cx="5" cy="12" r="1"></circle>
+  <circle cx="12" cy="12" r="1"></circle>
+  <circle cx="19" cy="12" r="1"></circle>
+</svg>
+</i></button>
+          <ul class="nav secondary submenu">
+    <li class="nav-privacy" 
+      data-label="Privacy" data-length="7">
+      <a href="../privacy/index.html">
+        <span>Privacy</span>
+      </a>
+    </li>
+    <li class="nav-terms" 
+      data-label="Terms" data-length="5">
+      <a href="../terms/index.html">
+        <span>Terms</span>
+      </a>
+    </li>
+    <li class="nav-contact" 
+      data-label="Contact" data-length="7">
+      <a href="../contact/index.html">
+        <span>Contact</span>
+      </a>
+    </li>
+    <li class="nav-natural-ui-wip" 
+      data-label="Natural UI (WIP)" data-length="16">
+      <a href="../laws-of-natural-ui/index.html">
+        <span>Natural UI (WIP)</span>
+      </a>
+    </li>
+</ul>
+        </div>
+    </nav>
+
+    <span class="header--spacer"></span>
+
+    <button class="btn-toggle header-search__toggle" data-ghost-search title="Search" aria-label="Search">
+      <i class="icon icon-search">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+</i>    </button>
+
+        <a href="../signup/index.html" class="btn signup-link btn--brand radius" data-portal="signup">Subscribe</a>
+      
+
+    <div class="member-menu js-member-menu">
+      <a href="../signup/index.html" data-portal="signup" class="signup-link">
+        <i class="icon icon-arrow-up-right icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-up-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <line x1="17" y1="7" x2="7" y2="17" />
+  <polyline points="8 7 17 7 17 16" />
+</svg>
+
+
+
+</i>Sign up
+      </a>
+
+      <a href="../signin/index.html" data-portal="signin" class="signin-link">
+        <i class="icon icon-login icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-in">
+  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+  <polyline points="10 17 15 12 10 7"></polyline>
+  <line x1="15" y1="12" x2="3" y2="12"></line>
+</svg>
+</i>Sign in
+      </a>
+</div>
+    <button class="btn-toggle menu__toggle js-menu-open"
+      type="button" title="Menu" aria-label="Menu">
+        <span></span>
+        <span></span>
+    </button>
+  </div>
+</header>
+
+
+      <div class="menu js-menu">
+  <div class="menu__header flex content-end">
+    <button class="btn-toggle menu__toggle is-active js-menu-close"
+      type="button" title="Menu" aria-label="Menu">
+        <span></span>
+        <span></span>
+    </button>
+  </div>
+
+  <nav class="menu__navigation">
+    <ul class="nav">
+    <li class="nav-home" 
+      data-label="Home" data-length="4">
+      <a href="../index.html">
+        <span>Home</span>
+      </a>
+    </li>
+    <li class="nav-about" 
+      data-label="About" data-length="5">
+      <a href="../about/index.html">
+        <span>About</span>
+      </a>
+    </li>
+</ul>
+
+      <ul class="nav secondary submenu">
+    <li class="nav-privacy" 
+      data-label="Privacy" data-length="7">
+      <a href="../privacy/index.html">
+        <span>Privacy</span>
+      </a>
+    </li>
+    <li class="nav-terms" 
+      data-label="Terms" data-length="5">
+      <a href="../terms/index.html">
+        <span>Terms</span>
+      </a>
+    </li>
+    <li class="nav-contact" 
+      data-label="Contact" data-length="7">
+      <a href="../contact/index.html">
+        <span>Contact</span>
+      </a>
+    </li>
+    <li class="nav-natural-ui-wip" 
+      data-label="Natural UI (WIP)" data-length="16">
+      <a href="../laws-of-natural-ui/index.html">
+        <span>Natural UI (WIP)</span>
+      </a>
+    </li>
+</ul>
+  </nav>
+
+  <div class="menu__actions flex w-100">
+        <a href="../signin/index.html" data-portal="signin" class="btn signin-link btn--bordered radius m-r">
+          Log in
+        </a>
+        <a href="../signup/index.html" data-portal="signup" class="btn signup-link btn--brand radius">
+          Subscribe
+        </a>
+  </div>
+</div>
+    <main class="main">
+      
+
+  <div class="container wrapper">
+  
+    <div class="post-hero is-post" 
+  data-feature-image="true" data-image-style="resource">
+  
+  <div class="post-hero__content flex flex-col">
+    <h1 class="post-hero__title">How To Use Figma Mirror To Design on Your Phone</h1>
+   
+      <div class="post-hero__excerpt text-acc">And why using Figma on your phone will improve your UI design.</div>
+
+      <div class="post-info text-acc m-t"> 
+  <ul class="post-info__avatars">
+      <li class="author-avatar has-image">
+        <a href="../author/gareth/index.html" title="Gareth" aria-label="Gareth">
+            <picture class="">
+  <source 
+    data-srcset="../content/images/size/w30/format/webp/2022/11/1585779806641.jpeg.webp 30w,../content/images/size/w100/format/webp/2022/11/1585779806641.jpeg.webp 100w,"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="lazyload"
+    data-srcset="../content/images/size/w30/2022/11/1585779806641.jpeg 30w,../content/images/size/w100/2022/11/1585779806641.jpeg 100w,"
+    srcset="../content/images/size/w30/2022/11/1585779806641.jpeg"
+    data-sizes="auto"
+    data-src="../content/images/size/w100/2022/11/1585779806641.jpeg"
+    src="../content/images/size/w30/2022/11/1585779806641.jpeg"
+    alt="Gareth"
+    
+  >
+</picture>        </a>
+      </li>
+  </ul>
+  <div class="post-info__detail">
+    <span class="post-info__author"><a href="../author/gareth/index.html">Gareth</a></span>
+    <div class="post-info__dr">
+      <time datetime="2022-11-02">Nov 2, 2022</time> 
+      <span class="post-info__readtime">6 min read</span>
+    </div>
+  </div>
+</div>  </div>
+
+    <div class="post-hero__media">
+      <figure class="post-hero__figure">
+        <picture class="">
+  <source 
+    data-srcset="../content/images/size/w300/format/webp/2022/11/FIGMA-MIRROR.png.webp 300w,../content/images/size/w600/format/webp/2022/11/FIGMA-MIRROR.png.webp 600w,../content/images/size/w1000/format/webp/2022/11/FIGMA-MIRROR.png.webp 1000w,../content/images/size/w2000/format/webp/2022/11/FIGMA-MIRROR.png.webp 2000w"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="lazyload post-hero__img"
+    data-srcset="../content/images/size/w300/2022/11/FIGMA-MIRROR.png 300w,../content/images/size/w600/2022/11/FIGMA-MIRROR.png 600w,../content/images/size/w1000/2022/11/FIGMA-MIRROR.png 1000w,../content/images/size/w2000/2022/11/FIGMA-MIRROR.png 2000w"
+    srcset="../content/images/size/w30/2022/11/FIGMA-MIRROR.png"
+    data-sizes="auto"
+    data-src="../content/images/size/w100/2022/11/FIGMA-MIRROR.png"
+    src="../content/images/size/w30/2022/11/FIGMA-MIRROR.png"
+    alt="How To Use Figma Mirror To Design on Your Phone"
+    
+  >
+</picture>        
+      </figure>
+    </div>
+
+</div>
+
+    <article class="post tag-figma content post-access-public">
+      <p>The Figma Mirror app, now just called Figma, is a powerful tool to have at your disposal as a UI designer.</p><p>If you're designing mobile apps and you're not designing on your phone, you need to start <em>immediately</em>. It will — I promise I'm not exaggerating — make you a better UI designer.</p><p>When you design an app for a phone, <em>on</em> a phone, you're removing one more layer of interpretation that your brain has to do to imagine it in context.</p><p><strong>The closer you can get to creating a 1:1 relationship between the context you're designing <em>for</em> and the context you're designing <em>in</em>, the better your designs will be.</strong></p><p>For those of you who have used an earlier Wacom or similar device and switched to an iPad Pro or similar device (again: once the technology of the iPad-like-device became close enough to a 1:1 experience,) it's like going from this:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/firos-nv-58c1dnakdRQ-unsplash.jpg" class="kg-image" alt loading="lazy" width="2000" height="1500" srcset="../content/images/size/w600/2022/10/firos-nv-58c1dnakdRQ-unsplash.jpg 600w, ../content/images/size/w1000/2022/10/firos-nv-58c1dnakdRQ-unsplash.jpg 1000w, ../content/images/size/w1600/2022/10/firos-nv-58c1dnakdRQ-unsplash.jpg 1600w, ../content/images/size/w2400/2022/10/firos-nv-58c1dnakdRQ-unsplash.jpg 2400w" sizes="(min-width: 720px) 720px"></figure><p>To this:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/cristofer-maximilian-PP1yKpfA4HY-unsplash.jpg" class="kg-image" alt loading="lazy" width="2000" height="1161" srcset="../content/images/size/w600/2022/10/cristofer-maximilian-PP1yKpfA4HY-unsplash.jpg 600w, ../content/images/size/w1000/2022/10/cristofer-maximilian-PP1yKpfA4HY-unsplash.jpg 1000w, ../content/images/size/w1600/2022/10/cristofer-maximilian-PP1yKpfA4HY-unsplash.jpg 1600w, ../content/images/size/w2400/2022/10/cristofer-maximilian-PP1yKpfA4HY-unsplash.jpg 2400w" sizes="(min-width: 720px) 720px"></figure><p>I know there will be diehard Wacom holdouts out there that will come after me for this comment. But. Once the refresh rate and pressure sensitivity of iPads caught up to the point of diminishing returns relative to the Wacom, the iPad provided an objectively better experience overall. </p><p>And this is because it closed the gap across screen quality, pressure levels, and response time, creating a near 1:1 experience for digital drawing and painting.</p><blockquote class="kg-blockquote-alt"><strong>The closer you can get to creating a 1:1 relationship between the context you're designing <em>for</em> and the context you're designing <em>in</em>, the better your designs will be.</strong></blockquote><p>In the Figma app, not only can you see the changes you make in the right context (on the phone) as you make them, but you can also interact with your designs as you design them.</p><p>Meaning, if you're designing an app and you've wired up your screens to be interactive, you can use it similar to how you'd use the actual app.</p><p>Even better: this means <em>other people</em> can use the screens you're working on as if it's in an actual app, so the feedback you get will <em>also </em>be nearly 1:1 with what it would be if they were using the actual app.</p><p>So without further ado, let's start out by downloading the Figma app. Here are the respective links for each platform:</p><p><a href="https://apps.apple.com/us/app/figma-and-figjam/id1152747299?ref=theuilab.co">Figma for iPhone</a></p><p><a href="https://play.google.com/store/apps/details?id=com.figma.mirror&amp;hl=en_US&amp;gl=US&amp;ref=theuilab.co">Figma for Android</a></p><p><strong>Once you've got the app downloaded, you need to know two things:</strong></p><ol><li>It requires you to be signed into the same Figma account on both your phone and computer</li><li>It used to require you to be on the same wi-fi network. Now it doesn't, but I'd recommend it anyway, since it will use a lot of data otherwise.</li></ol><p>Now that you're signed into the app and into your Figma account on your computer, you can simply click a frame to select it.</p><p><strong>Important note:</strong> you should use a frame size that matches your phone. This is important because your elements will not be sized correctly if you don't. If you don't know, here's how you set that.</p><p><strong>Why this is important:</strong> imagine designing in a tablet-sized screen size, and then viewing it on your phone: all of those pixels will just be scaled down to fit within the viewport of your phone, so you won't be getting an accurate read on the sizing of your elements.</p><p><strong>To do this, first select the Frame tool in the upper left. You can also press F on your keyboard. </strong></p><figure class="kg-card kg-image-card"><img src="../content/images/2022/11/Frame-tool.png" class="kg-image" alt loading="lazy" width="904" height="310" srcset="../content/images/size/w600/2022/11/Frame-tool.png 600w, ../content/images/2022/11/Frame-tool.png 904w" sizes="(min-width: 720px) 720px"></figure><div class="kg-card kg-callout-card kg-callout-card-green"><div class="kg-callout-emoji">⚡</div><div class="kg-callout-text">Ps- If you haven't already, start learning those hotkeys! I was a hold-out for a long time; I'm a naturally mouse-driven computer user. But using hotkeys in combination with my mouse has <em>seriously</em> sped up my workflow.</div></div><p>Once you have the Frame tool selected, check out the top right of the Figma screen. You'll get a list of frame sizes for common devices:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/11/Figma-frame-sizes.png" class="kg-image" alt loading="lazy" width="1784" height="1798" srcset="../content/images/size/w600/2022/11/Figma-frame-sizes.png 600w, ../content/images/size/w1000/2022/11/Figma-frame-sizes.png 1000w, ../content/images/size/w1600/2022/11/Figma-frame-sizes.png 1600w, ../content/images/2022/11/Figma-frame-sizes.png 1784w" sizes="(min-width: 720px) 720px"></figure><p>They do a pretty good job of updating this list. So check for your phone, and if you can't find it, I'd recommend creating your own frame sized based on the aspect ratio and dimensions of your phone.</p><p>Ok. Now that we have our frame set up, let's start mirroring our designs on our phone!</p><p>If you have the Figma app open on your phone, and you're signed into the right account, just select the frame you want to mirror to have it display on your phone.</p><p><strong>Small pro tip: it's easier to select the frame if you click near the name:</strong></p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/select-frame.png" class="kg-image" alt loading="lazy" width="1138" height="846" srcset="../content/images/size/w600/2022/10/select-frame.png 600w, ../content/images/size/w1000/2022/10/select-frame.png 1000w, ../content/images/2022/10/select-frame.png 1138w" sizes="(min-width: 720px) 720px"><figcaption>Click near the name to select a frame.</figcaption></figure><p>The Figma app will detect that you've selected a frame and will ask you if you want to mirror it on your device:</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/uilab-figma-mirror-1.jpg" class="kg-image" alt loading="lazy" width="1065" height="800" srcset="../content/images/size/w600/2022/10/uilab-figma-mirror-1.jpg 600w, ../content/images/size/w1000/2022/10/uilab-figma-mirror-1.jpg 1000w, ../content/images/2022/10/uilab-figma-mirror-1.jpg 1065w" sizes="(min-width: 720px) 720px"><figcaption>Select the frame in Figma, and you'll get a prompt on your phone.</figcaption></figure><p><strong>Alternatively, you can tap on the Mirror tab,</strong> where after selecting the frame, you'll see an in-line prompt to mirror your selected frame.</p><p>Then in either place, select Mirror, and the frame should display on your device:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/uilab-figma-mirror2.jpg" class="kg-image" alt loading="lazy" width="1065" height="800" srcset="../content/images/size/w600/2022/10/uilab-figma-mirror2.jpg 600w, ../content/images/size/w1000/2022/10/uilab-figma-mirror2.jpg 1000w, ../content/images/2022/10/uilab-figma-mirror2.jpg 1065w" sizes="(min-width: 720px) 720px"></figure><p>You can now move elements around in the desktop, and the changes will happen in real time in the Figma mirror app so long as you select the frame.</p><p>This means you have instant feedback as you design.</p><p>I actually set up my phone next to my computer and use it as my primary design "display" when I'm doing UI design for mobile apps, using the desktop app as more of an input to what I'm seeing on my phone:</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/11/figma-mirror-setup.png" class="kg-image" alt loading="lazy" width="2000" height="1570" srcset="../content/images/size/w600/2022/11/figma-mirror-setup.png 600w, ../content/images/size/w1000/2022/11/figma-mirror-setup.png 1000w, ../content/images/size/w1600/2022/11/figma-mirror-setup.png 1600w, ../content/images/2022/11/figma-mirror-setup.png 2230w" sizes="(min-width: 720px) 720px"><figcaption>Stop looking at my dusty keyboard</figcaption></figure><p>It's also possible to run prototypes in the Figma app so you can tap around what you've designed. The setup process is the same as the one we just did; just make elements into an interactive prototype in Figma, and you'll be able to see them as you design <em>and </em>tap to use them.</p><p>Once you get the hang of it, using Figma mirror to design on your phone will change how you think about mobile app design. You can start designing as if you are designing an app in real time, rather than designing a picture of an app that will then be built into one.</p><p>It'll save you time translating your designs to workable sizes, gives you a better sense of how your colors will appear on a modern phone screen, and forces you to consider the usability of your design immediately and proactively rather than retroactively.</p><p>The cherry on top: handing someone a UI designed and having them use it right in front of you is a way more efficient way to get feedback on your designs.</p><p>When you design on your phone, there are fewer layers of interpretation and less suspense-of-disbelief required. Less imagining, and more doing the next thing. </p><p><strong>Bottom line: it will make you more efficient designer overall, and I'd highly recommend it.</strong></p><p>Happy designing! ⚡</p><p><em>Was this article helpful? You can support me by <a href="https://www.buymeacoffee.com/uilab?ref=theuilab.co">buying me a coffee</a>! (I love coffee.)</em></p><hr><p>Fyi, here's what I use to keep my phone propped up while I'm designing. I like it because:</p><ul><li>You don't see much of the stand around your phone</li><li>There's a hole in the back for a charger cable</li><li>It's metal, so it helps keep your phone cool with all the Figma-ing</li><li>It's cheap and looks decent</li></ul><div class="kg-card kg-product-card"><div class="kg-product-card-container"><img src="../content/images/2022/10/61u3D5V4I7L._AC_SL1300_.jpg" width="1300" height="1300" srcset="../content/images/size/w600/2022/10/61u3D5V4I7L._AC_SL1300_.jpg 600w, ../content/images/size/w1000/2022/10/61u3D5V4I7L._AC_SL1300_.jpg 1000w, ../content/images/2022/10/61u3D5V4I7L._AC_SL1300_.jpg 1300w" sizes="(min-width: 720px) 720px" class="kg-product-card-image" loading="lazy"><div class="kg-product-card-title-container"><h4 class="kg-product-card-title">Lamicall Cell Phone Stand</h4></div><div class="kg-product-card-description"><p>$9.99</p></div><a href="https://amzn.to/3gVkXNU?ref=theuilab.co" class="kg-product-card-button kg-product-card-btn-accent" target="_blank" rel="noopener noreferrer"><span>Buy on Amazon</span></a></div></div><p></p>
+    </article>
+
+          <div class="post-tags content-width">
+        <a href="../tag/figma/index.html" style="--color-accent:#F24E1E;">Figma</a>
+    </div>
+
+        <div class="social-share content-width m-b-xl">
+  <a class="social-share__item twitter js-share" target="_blank"
+      href="https://twitter.com/share?text=How%20To%20Use%20Figma%20Mirror%20To%20Design%20on%20Your%20Phone&amp;url=https://www.theuilab.co/how-to-use-figma-mirror/"
+      title="Share on Twitter" aria-label="Share on Twitter">
+    <i class="icon icon-twitter icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+</i>    <span>Tweet</span>
+  </a>
+  <a class="social-share__item facebook js-share" target="_blank"
+      href="https://www.facebook.com/sharer.php?u=https://www.theuilab.co/how-to-use-figma-mirror/"
+      title="Share on Facebook" aria-label="Share on Facebook">
+    <i class="icon icon-facebook icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-facebook" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3" />
+</svg>
+
+
+
+</i>    <span>Share</span>
+  </a>
+  <a class="social-share__item linkedin js-share" target="_blank"
+      href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://www.theuilab.co/how-to-use-figma-mirror/&amp;title=How%20To%20Use%20Figma%20Mirror%20To%20Design%20on%20Your%20Phone&amp;summary=How%20To%20Use%20Figma%20Mirror%20To%20Design%20on%20Your%20Phone"
+      title="Share on Linkedin" aria-label="Share on Linkedin">
+    <i class="icon icon-linkedin icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-linkedin">
+  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+  <rect x="2" y="9" width="4" height="12"></rect>
+  <circle cx="4" cy="4" r="2"></circle>
+</svg>
+</i>    <span>Share</span>
+  </a>
+  <a class="social-share__item mail"
+      href="mailto:?subject=How%20To%20Use%20Figma%20Mirror%20To%20Design%20on%20Your%20Phone&body=https://www.theuilab.co/how-to-use-figma-mirror/&nbsp;How%20To%20Use%20Figma%20Mirror%20To%20Design%20on%20Your%20Phone"
+      title="Share by email" aria-label="Share by email">
+    <i class="icon icon-mail icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mail" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <rect x="3" y="5" width="18" height="14" rx="2" />
+  <polyline points="3 7 12 13 21 7" />
+</svg>
+</i>    <span>Email</span>
+  </a>
+  <button class="copy-link copy js-copy-link" data-url="https://www.theuilab.co/how-to-use-figma-mirror/"
+      title="Copy to clipboard" data-label="Copied!" aria-label="Copy to clipboard">
+    <i class="icon icon-copy icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <rect x="8" y="8" width="12" height="12" rx="2" />
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2" />
+</svg>
+</i>    <span>Copy</span>
+  </button>
+</div>
+
+
+      <div class="flex flex-wrap gap-lg m-b-lg">
+        
+              <div class="related-posts radius-double p-lg flex-1 self-align-start">
+        <span class="section-title sm m-b uppercase">Read next</span>
+        <div class="post-list m-b-sm">
+            <a class="post-list-item" href="../make-elements-more-readable/index.html">
+              <h3 class="post-list-item__title">How to Increase Contrast for Accessibility While Staying On-Brand</h3>
+              <i class="icon icon-chevron-right">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <polyline points="9 6 15 12 9 18"></polyline>
+</svg>
+</i>            </a>
+            <a class="post-list-item" href="../6-figma-timesavers/index.html">
+              <h3 class="post-list-item__title">6 Figma Features That Will Save You a Ton of Time</h3>
+              <i class="icon icon-chevron-right">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <polyline points="9 6 15 12 9 18"></polyline>
+</svg>
+</i>            </a>
+            <a class="post-list-item" href="../create-polished-shadows-in-figma/index.html">
+              <h3 class="post-list-item__title">How to Create a Polished and Professional Figma Dropshadow</h3>
+              <i class="icon icon-chevron-right">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <polyline points="9 6 15 12 9 18"></polyline>
+</svg>
+</i>            </a>
+            <a class="post-list-item" href="../use-the-eyedropper-tool/index.html">
+              <h3 class="post-list-item__title">How to Use the Eyedropper Tool in Figma</h3>
+              <i class="icon icon-chevron-right">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <polyline points="9 6 15 12 9 18"></polyline>
+</svg>
+</i>            </a>
+            <a class="post-list-item" href="../how-to-use-the-figma-color-picker/index.html">
+              <h3 class="post-list-item__title">How To Use the Figma Color Picker</h3>
+              <i class="icon icon-chevron-right">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <polyline points="9 6 15 12 9 18"></polyline>
+</svg>
+</i>            </a>
+        </div>
+      </div>
+      </div>
+  </div>
+
+
+
+    </main>
+
+          <section class="container wrapper section cta m-b-0 is-post" >
+      <div class="cta__inner radius-double is-rel w-100 p-t-lg p-b-lg has-img">
+        <div class="cta__content flex flex-col is-rel z-index-1">
+          <h2 class="cta__title">UI design expertise <span>on tap<span></h2>
+          <p id="cta-input-label" class="cta__description opacity-075">Become a better designer in 10 minutes a day. Professional, bite-size design expertise delivered to your inbox.</p>
+          
+              <form class="subscribe-form" 
+  data-members-form="signup" data-style="inline-joined">
+  <input data-members-email class="" 
+    type="email" autocomplete="email" placeholder="Your email address" 
+    aria-labelledby="cta-input-label" required> 
+  <button class="btn btn--brand btn--gradient uppercase" type="submit">
+    <span>Subscribe</span>
+  </button>
+  <div class="msg-success">Great! Check your inbox and click the link.</div>
+  <div class="msg-error">Sorry, something went wrong. Please try again.</div>
+</form>        </div>
+        
+          <figure class="cta__media">
+            <picture class="">
+  <source 
+    data-srcset="../content/images/size/w300/format/webp/2023/03/Frame-41.png.webp 300w,../content/images/size/w600/format/webp/2023/03/Frame-41.png.webp 600w,../content/images/size/w1000/format/webp/2023/03/Frame-41.png.webp 1000w,../content/images/size/w2000/format/webp/2023/03/Frame-41.png.webp 2000w"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="lazyload cta__img"
+    data-srcset="../content/images/size/w300/2023/03/Frame-41.png 300w,../content/images/size/w600/2023/03/Frame-41.png 600w,../content/images/size/w1000/2023/03/Frame-41.png 1000w,../content/images/size/w2000/2023/03/Frame-41.png 2000w"
+    srcset="../content/images/size/w30/2023/03/Frame-41.png"
+    data-sizes="auto"
+    data-src="../content/images/size/w100/2023/03/Frame-41.png"
+    src="../content/images/size/w30/2023/03/Frame-41.png"
+    alt="The UI Lab"
+    
+  >
+</picture>          </figure>
+      </div>
+    </section>
+      
+      <footer class="footer">
+  <div class="container wrapper">
+    <div class="row m-b">
+      <div class="col-xs-12 col-md-4">
+        <div class="footer__brand flex items-center">
+            <picture class="">
+  <source 
+    data-srcset="../content/images/size/w300/format/webp/2023/03/uilab-logo.svg.webp 300w,"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="footer__logo m-r lazyload"
+    data-srcset="../content/images/2023/03/uilab-logo.svg 300w,"
+    srcset="../content/images/2023/03/uilab-logo.svg"
+    data-sizes="auto"
+    data-src="../content/images/2023/03/uilab-logo.svg"
+    src="../content/images/2023/03/uilab-logo.svg"
+    alt="The UI Lab"
+    
+  >
+</picture>        </div>
+
+        <div class="footer__description" id="footer-input-label">
+          Quick tutorials for UI design mastery.
+        </div>
+
+              <form class="subscribe-form radius-rounded m-b" 
+  data-members-form="subscribe" data-style="inline-joined">
+  <input data-members-email class="w-100 radius-rounded" 
+    type="email" autocomplete="email" placeholder="Your email address" 
+    aria-labelledby="footer-input-label" required> 
+  <button class="btn btn--primary radius-rounded" type="submit">
+    <span>Subscribe</span>
+  </button>
+  <div class="msg-success">Great! Check your inbox and click the link.</div>
+  <div class="msg-error">Sorry, something went wrong. Please try again.</div>
+</form>      </div>
+
+      <div class="col-xs-12 col-md-4 m-b footer-nav">
+        <span class="fw-700 m-b-sm display-block text-acc">Navigation</span>
+        <div class="grid col-2">
+          <ul class="nav">
+    <li class="nav-home" 
+      data-label="Home" data-length="4">
+      <a href="../index.html">
+        <span>Home</span>
+      </a>
+    </li>
+    <li class="nav-about" 
+      data-label="About" data-length="5">
+      <a href="../about/index.html">
+        <span>About</span>
+      </a>
+    </li>
+</ul>
+
+            <ul class="nav secondary submenu">
+    <li class="nav-privacy" 
+      data-label="Privacy" data-length="7">
+      <a href="../privacy/index.html">
+        <span>Privacy</span>
+      </a>
+    </li>
+    <li class="nav-terms" 
+      data-label="Terms" data-length="5">
+      <a href="../terms/index.html">
+        <span>Terms</span>
+      </a>
+    </li>
+    <li class="nav-contact" 
+      data-label="Contact" data-length="7">
+      <a href="../contact/index.html">
+        <span>Contact</span>
+      </a>
+    </li>
+    <li class="nav-natural-ui-wip" 
+      data-label="Natural UI (WIP)" data-length="16">
+      <a href="../laws-of-natural-ui/index.html">
+        <span>Natural UI (WIP)</span>
+      </a>
+    </li>
+</ul>
+        </div>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-2 m-b">
+              <span class="fw-700 m-b-sm display-block text-acc">Resources</span>
+              <ul class="nav">
+                  <li><a href="../tag/accessibility/index.html">Accessibility</a></li>
+                  <li><a href="../tag/color/index.html">Color</a></li>
+                  <li><a href="../tag/paywall-design/index.html">Paywall Design</a></li>
+                  <li><a href="../tag/visual-design/index.html">Visual Design</a></li>
+                  <li><a href="../tag/figma/index.html">Figma</a></li>
+              </ul>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-2 m-b">
+        <span class="fw-700 m-b-sm display-block text-acc">Social</span>
+        <div class="social-links flex flex-col">
+          
+
+<a href="../rss/index.rss" class="rss" aria-label="RSS"><i class="icon icon-rss icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rss" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <circle cx="5" cy="19" r="1" />
+  <path d="M4 4a16 16 0 0 1 16 16" />
+  <path d="M4 11a9 9 0 0 1 9 9" />
+</svg>
+
+
+
+</i><span>RSS</span></a>
+
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <div class="footer__copy">
+        <span>&copy;2023&nbsp;<a href="../index.html">The UI Lab</a>.</span>
+        <span>Published with&nbsp;<a href="https://ghost.org">Ghost</a>&nbsp;&&nbsp;<a href="https://bironthemes.com/themes/rinne-ghost/">Rinne</a>.</span>
+      </div>
+
+      <div class="color-scheme flex flex-cc radius-half">
+  <div class="color-scheme-symbol">
+    <span class="accent-bg"></span>
+  </div>
+  <select class="color-scheme-select radius-half js-color-scheme-select" aria-label="Change color scheme">
+    <option value="system" selected>System</option>
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+  <i class="icon icon-select">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-select" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M17 8.517L12 3 7 8.517M7 15.48l5 5.517 5-5.517"></path>
+</svg>
+
+
+
+</i></div>    </div>
+
+  </div>
+</footer>
+
+    <dialog class="notification">
+  <i class="icon icon-success notification-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M9 12l2 2l4 -4" />
+</svg>
+
+
+
+</i>  <i class="icon icon-error notification-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alert-octagon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M8.7 3h6.6c.3 0 .5 .1 .7 .3l4.7 4.7c.2 .2 .3 .4 .3 .7v6.6c0 .3 -.1 .5 -.3 .7l-4.7 4.7c-.2 .2 -.4 .3 -.7 .3h-6.6c-.3 0 -.5 -.1 -.7 -.3l-4.7 -4.7c-.2 -.2 -.3 -.4 -.3 -.7v-6.6c0 -.3 .1 -.5 .3 -.7l4.7 -4.7c.2 -.2 .4 -.3 .7 -.3z" />
+  <line x1="12" y1="8" x2="12" y2="12" />
+  <line x1="12" y1="16" x2="12.01" y2="16" />
+</svg>
+
+
+
+</i>  <i class="icon icon-warning notification-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alert-triangle" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M12 9v2m0 4v.01" />
+  <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75" />
+</svg>
+
+
+
+</i>  <p class="notification-msg signup-success">Great! You’ve successfully signed up.</p> 
+  <p class="notification-msg signin-success">Welcome back! You&#x27;ve successfully signed in.</p> 
+  <p class="notification-msg subscribe-success">You&#x27;ve successfully subscribed to The UI Lab.</p> 
+  <p class="notification-msg link-expired">Your link has expired.</p> 
+  <p class="notification-msg checkout-success">Success! Check your email for magic link to sign-in.</p> 
+  <p class="notification-msg billing-success">Success! Your billing info has been updated.</p> 
+  <p class="notification-msg billing-cancel">Your billing was not updated.</p> 
+  <button class="notification-close js-notification-close" aria-label="Close" onclick="closeNotification(event.currentTarget.parentNode);">
+    <i class="icon icon-x">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+</svg>
+</i>  </button>
+</dialog>
+
+      
+    
+
+    
+
+      <script>
+    // Copy button
+    const copyBtn = document.querySelector('.js-copy-link');
+    if (copyBtn) {
+      copyBtn.onclick = function(event) {
+        copyToClipboard(event.currentTarget, event.currentTarget.getAttribute('data-url'));
+      }
+    }
+    
+    /** 
+    * Copy to clipboard
+    * @src - source element
+    * @str - string to copy
+    */ 
+    const copyToClipboard = function(src, str) {
+      const el = document.createElement('textarea');
+      el.value = str;
+      el.setAttribute('readonly', '');
+      el.style.position = 'absolute';
+      el.style.left = '-9999px';
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+
+      src.classList.add('has-tooltip');
+      src.setAttribute('data-label', 'Copied!');
+
+      src.onmouseleave = function() { 
+        src.classList.remove('has-tooltip');
+        setTimeout(function(){
+          src.setAttribute('data-label', '');
+        }, 500); 
+      }
+    };
+  </script>
+
+<script>
+  const navItems = document.querySelectorAll('.header .nav:not(.submenu) li')
+  const allNavItems = document.querySelectorAll('.is-subitem')
+
+  // Remove '-' signs
+  allNavItems.forEach(item => {
+    const itemName = item.querySelector('a span')
+    itemName.innerText = itemName.innerText.slice(1)
+  });
+
+  // Add subitems in place
+  let subMenu, hasItems
+  navItems.forEach((item, index) => {
+    if (item.classList.contains('is-subitem') && !navItems[index - 1].classList.contains('is-subitem')) navItems[index - 1].classList.add('is-mainitem'); 
+    subMenu = item.classList.contains('is-subitem') ? subMenu : document.createElement('ul');
+    if (item.classList.contains('is-subitem')) { 
+      subMenu.appendChild(item)
+      subMenu.classList.add('nav','submenu')
+    } else { 
+      item.appendChild(subMenu)
+    }
+  });
+</script>
+
+  <script>
+    // Give the parameter a variable name
+    const qsParams = new URLSearchParams(window.location.search);
+    const isAction = qsParams.has('action');
+    const isStripe = qsParams.has('stripe');
+    const success = qsParams.get('success');
+    const action = qsParams.get('action');
+    const stripe = qsParams.get('stripe');
+
+    if (qsParams && isAction) {
+      if (success === "true") {
+        switch (action) {
+          case 'subscribe':
+            openNotification('subscribe-success');
+            break;
+          case 'signup': 
+            openNotification('signup-success');
+            break;
+          case 'signin':
+            openNotification('signin-success');
+            break;
+          default:
+            break;
+        }
+      } else {
+        openNotification('link-expired');
+      }
+    }
+
+    if (qsParams && isStripe) {
+      switch (stripe) {
+        case 'success':
+          openNotification('checkout-success');
+          break;
+        case 'billing-update-success':
+          openNotification('billing-success');
+          break;
+        case 'billing-update-cancel':
+          openNotification('billing-cancel');
+          break;
+        default:
+          break;
+      }
+    }
+
+    /**
+    * Handle Notifications
+    */
+    function openNotification(type) {
+      const notification = document.querySelector('dialog.notification');
+      if (notification) { 
+        notification.setAttribute('data-msg-type', type);
+        notification.show();
+        setTimeout(function(){ closeNotification(notification); }, 3000);
+      }
+    }
+    
+    /**
+    * Clean URI
+    */
+    function clearURI() {
+      window.history.replaceState({}, '', `${window.location.pathname}`);
+    }
+
+    function closeNotification(notification) {
+      notification.close();
+      clearURI();
+      setTimeout(function(){ notification.removeAttribute('data-msg-type') }, 500);
+    }
+  </script>
+
+
+    
+  </body>
+</html>

@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en" data-color-scheme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Create a &quot;Premium Tier&quot; Gold Effect in Figma – The UI Lab</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="theme-color" content="#D2324F">
+
+
+    <link rel="preload" href="../assets/dist/app.min%EF%B9%96v=6e662c445f.js" as="script">
+    <link rel="preload" href="../assets/dist/app.min%EF%B9%96v=6e662c445f.css" as="style">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+
+    <link rel="preload stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&amp;display=swap" 
+          as="style" onload="this.onload=null;this.rel='stylesheet'" crossorigin>
+    <style>body { --font-body: 'Figtree', sans-serif; --font-headings: 'Figtree', sans-serif; }</style>
+
+
+
+
+
+
+
+    <script async defer src="../assets/dist/app.min%EF%B9%96v=6e662c445f.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../assets/dist/app.min%EF%B9%96v=6e662c445f.css">
+
+    <style>:root {
+    --global-max-width: 1320px; /* site max width */
+    --global-content-width: 680px; /* post-content-width */
+    --global-wide-width: 960px; /* site max width */
+    --global-post-hero-content-max-width: 768px;
+    --global-radius: 5px; /* default radius */
+    --global-gallery-gap: 1em; /* Image gallery distance between images */
+    --global-hyphens: none; /* none/auto */
+    --global-header-height: 72px;
+    --global-theme-notifications: visible; /* visible/hidden */
+    --global-progress-bar: visible; /* visible/hidden */
+    --global-content-preview-fading: 0%; /* 50%-100% for fading effect */
+    --global-hero-img-filter: ;
+    --global-scroll-behavior: auto;
+  }
+</style>
+
+<script>
+  let preferredTheme = localStorage.getItem('PREFERRED_COLOR_SCHEME') || `light`;
+  document.documentElement.setAttribute('data-color-scheme', preferredTheme);
+  
+  // Global values needed
+  const themeGlobal = {
+    currentPage: parseInt(''),
+    nextPage: parseInt(''),
+    nextPageLink: '',
+    maxPages: parseInt(''), 
+    lastPage: `` === `` ? true : false,
+    postsPerPage: parseInt('24'),
+    scrollPos: 0,
+    imageLightbox: `true` === `true` ? true : false
+  }
+
+  // Calculate contrast & HSL value;
+  function getBrandColorInfo(hexcolor) {
+    // get contrast
+    if (hexcolor.slice(0, 1) === '#') { hexcolor = hexcolor.slice(1); }
+    if (hexcolor.length === 3) { hexcolor = hexcolor.split('').map(function (hex) { return hex + hex;}).join(''); }
+    let r = parseInt(hexcolor.substr(0,2),16), g = parseInt(hexcolor.substr(2,2),16), b = parseInt(hexcolor.substr(4,2),16);
+    let yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    const colorContrast = (yiq >= 128) ? '#000' : '#fff';
+
+    //get HSL
+    r /= 255, g /= 255, b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min)  /  2;  
+    if ( max == min ) { h = s = 0; } else {
+      let d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch(max){
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h /= 6;
+    }
+    const colorHSL = [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
+
+    // return
+    return { colorContrast, colorHSL }
+  };
+
+  const brandColor = getBrandColorInfo("#D2324F");
+  let style = document.createElement('style');
+  style.innerHTML = `:root { 
+    --color-brand-contrast: ${brandColor.colorContrast}; 
+    --color-brand-h: ${brandColor.colorHSL[0]};
+    --color-brand-s: ${brandColor.colorHSL[1]}%;
+    --color-brand-l: ${brandColor.colorHSL[2]}%;
+    --color-brand-hsl: ${brandColor.colorHSL[0]} ${brandColor.colorHSL[1]}% ${brandColor.colorHSL[2]}%;
+  }`
+  document.getElementsByTagName('head')[0].appendChild(style);
+</script>
+
+    
+    
+     
+
+    <meta name="description" content="Learn how to design premium-feeling gold UI elements for your premium tier products in Figma." />
+    <link rel="icon" href="../content/images/size/w256h256/2023/03/uilab-1.png" type="image/png" />
+    <link rel="canonical" href="index.html" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    
+    <meta property="og:site_name" content="The UI Lab" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Create a &quot;Premium Tier&quot; Gold Effect in Figma – The UI Lab" />
+    <meta property="og:description" content="Learn how to design premium-feeling gold UI elements for your premium tier products in Figma." />
+    <meta property="og:url" content="https://www.theuilab.co/how-to-make-gold-ui-elements/" />
+    <meta property="og:image" content="https://www.theuilab.co/content/images/2023/03/gold-effect-figma-template.png" />
+    <meta property="article:published_time" content="2022-10-30T16:50:28.000Z" />
+    <meta property="article:modified_time" content="2023-03-14T19:35:53.000Z" />
+    <meta property="article:tag" content="Paywall Design" />
+    <meta property="article:tag" content="Visual Design" />
+    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Create a &quot;Premium Tier&quot; Gold Effect in Figma – The UI Lab" />
+    <meta name="twitter:description" content="Learn how to design premium-feeling gold UI elements for your premium tier products in Figma." />
+    <meta name="twitter:url" content="https://www.theuilab.co/how-to-make-gold-ui-elements/" />
+    <meta name="twitter:image" content="https://www.theuilab.co/content/images/2023/03/gold-effect-figma-template.png" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Gareth" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Paywall Design, Visual Design" />
+    <meta property="og:image:width" content="1600" />
+    <meta property="og:image:height" content="1200" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "The UI Lab",
+        "url": "https://www.theuilab.co/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.theuilab.co/content/images/2023/03/uilab-logo.svg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Gareth",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://www.theuilab.co/content/images/2022/11/1585779806641.jpeg",
+            "width": 800,
+            "height": 800
+        },
+        "url": "../author/gareth/index.html",
+        "sameAs": []
+    },
+    "headline": "Create a &quot;Premium Tier&quot; Gold Effect in Figma – The UI Lab",
+    "url": "https://www.theuilab.co/how-to-make-gold-ui-elements/",
+    "datePublished": "2022-10-30T16:50:28.000Z",
+    "dateModified": "2023-03-14T19:35:53.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://www.theuilab.co/content/images/2023/03/gold-effect-figma-template.png",
+        "width": 1600,
+        "height": 1200
+    },
+    "keywords": "Paywall Design, Visual Design",
+    "description": "Jump to the template👇\n\nYou know those fancy gold effects you see in app UIs like Robinhood or Tinder?\n\nSometimes you&#x27;ll see it used for mobile game UIs, for in game currencies, achievements, or awards:\n\nThe use of gold as a color association to create feelings of exclusiveness and richness is one as old as time. Just go to any casino. Think that gold lighting and curtains are a mistake? Nope.\n\nOr how about this credit card from AMEX?\n\nGetting something gold for your money is cashing in (ha) on ",
+    "mainEntityOfPage": "https://www.theuilab.co/how-to-make-gold-ui-elements/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.46" />
+    <link rel="alternate" type="application/rss+xml" title="The UI Lab" href="../rss/index.rss" />
+    <script defer src="https://cdn.jsdelivr.net/ghost/portal@~2.29/umd/portal.min.js" data-i18n="false" data-ghost="https://www.theuilab.co/" data-key="dd1aa13c5fa2a25d25457e722a" data-api="https://gareth.ghost.io/ghost/api/content/" crossorigin="anonymous"></script><style id="gh-members-styles">.gh-post-upgrade-cta-content,
+.gh-post-upgrade-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+    width: 100%;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.gh-post-upgrade-cta-content {
+    border-radius: 8px;
+    padding: 40px 4vw;
+}
+
+.gh-post-upgrade-cta h2 {
+    color: #ffffff;
+    font-size: 28px;
+    letter-spacing: -0.2px;
+    margin: 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta p {
+    margin: 20px 0 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta small {
+    font-size: 16px;
+    letter-spacing: -0.2px;
+}
+
+.gh-post-upgrade-cta a {
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a:hover {
+    color: #ffffff;
+    opacity: 0.8;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a.gh-btn {
+    display: block;
+    background: #ffffff;
+    text-decoration: none;
+    margin: 28px 0 0;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.gh-post-upgrade-cta a.gh-btn:hover {
+    opacity: 0.92;
+}</style><script async src="https://js.stripe.com/v3/"></script>
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="dd1aa13c5fa2a25d25457e722a" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://gareth.ghost.io/" crossorigin="anonymous"></script>
+    
+    <link href="https://www.theuilab.co/webmentions/receive/" rel="webmention" />
+    <script defer src="../public/cards.min%EF%B9%96v=6e662c445f.js"></script>
+    <link rel="stylesheet" type="text/css" href="../public/cards.min%EF%B9%96v=6e662c445f.css">
+    <script defer src="../public/member-attribution.min%EF%B9%96v=6e662c445f.js"></script>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVC3N5X7W3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YVC3N5X7W3');
+</script>
+
+<style>.site-head-logo{
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    }
+</style>
+
+<style>.header__brand img{
+    height:40px;
+    }
+</style>
+
+<meta name="theme-color" content="#1A1F22">
+
+
+<!-- Hotjar Tracking Code for https://www.theuilab.co -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:3247598,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+
+<style>.welcome {
+        min-height:360px;
+        background-color: transparent;
+    }
+    
+    .has-bg{
+        background-color: transparent;
+    }
+   
+    
+    .welcome__title{
+        font-size:3rem;
+    }
+    
+:root {
+
+ --global-radius: 0px;
+    }
+    
+    .kg-button-card a.kg-btn {
+            border-radius: 1px;
+    }
+    
+    .btn--gradient:before {
+ background: linear-gradient(135deg,rgba(210,50,79,1),rgba(210,50,79,1));
+    }
+</style>
+
+<style>:root {--ghost-accent-color: #D2324F;}</style>
+  </head>
+  <body class="post-template tag-paywall-design tag-visual-design" data-hero-image="">
+    <div class="progress-bar"></div>
+    
+      <header class="header js-header" data-header="normal">
+  <div class="container wrapper flex is-rel header__inner">
+<a class="header__brand" href="../index.html">        <picture class="">
+  <source 
+    srcset="../content/images/size/w300/format/webp/2023/03/uilab-logo.svg.webp 300w,"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="header__logo"
+    data-srcset="../content/images/2023/03/uilab-logo.svg 300w,"
+    srcset="../content/images/2023/03/uilab-logo.svg"
+    data-sizes="auto"
+    data-src="../content/images/2023/03/uilab-logo.svg"
+    src="../content/images/2023/03/uilab-logo.svg"
+    alt="The UI Lab"
+    loading="eager"
+  >
+</picture></a>
+    <nav class="header__menu items-center">
+      <ul class="nav">
+    <li class="nav-home" 
+      data-label="Home" data-length="4">
+      <a href="../index.html">
+        <span>Home</span>
+      </a>
+    </li>
+    <li class="nav-about" 
+      data-label="About" data-length="5">
+      <a href="../about/index.html">
+        <span>About</span>
+      </a>
+    </li>
+</ul>
+
+        <div class="header__menu--sub items-center">
+          <button class="header__menu--more is-mainitem" aria-label="Menu"><i class="icon icon-dots">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-dots" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <circle cx="5" cy="12" r="1"></circle>
+  <circle cx="12" cy="12" r="1"></circle>
+  <circle cx="19" cy="12" r="1"></circle>
+</svg>
+</i></button>
+          <ul class="nav secondary submenu">
+    <li class="nav-privacy" 
+      data-label="Privacy" data-length="7">
+      <a href="../privacy/index.html">
+        <span>Privacy</span>
+      </a>
+    </li>
+    <li class="nav-terms" 
+      data-label="Terms" data-length="5">
+      <a href="../terms/index.html">
+        <span>Terms</span>
+      </a>
+    </li>
+    <li class="nav-contact" 
+      data-label="Contact" data-length="7">
+      <a href="../contact/index.html">
+        <span>Contact</span>
+      </a>
+    </li>
+    <li class="nav-natural-ui-wip" 
+      data-label="Natural UI (WIP)" data-length="16">
+      <a href="../laws-of-natural-ui/index.html">
+        <span>Natural UI (WIP)</span>
+      </a>
+    </li>
+</ul>
+        </div>
+    </nav>
+
+    <span class="header--spacer"></span>
+
+    <button class="btn-toggle header-search__toggle" data-ghost-search title="Search" aria-label="Search">
+      <i class="icon icon-search">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+</i>    </button>
+
+        <a href="../signup/index.html" class="btn signup-link btn--brand radius" data-portal="signup">Subscribe</a>
+      
+
+    <div class="member-menu js-member-menu">
+      <a href="../signup/index.html" data-portal="signup" class="signup-link">
+        <i class="icon icon-arrow-up-right icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-up-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <line x1="17" y1="7" x2="7" y2="17" />
+  <polyline points="8 7 17 7 17 16" />
+</svg>
+
+
+
+</i>Sign up
+      </a>
+
+      <a href="../signin/index.html" data-portal="signin" class="signin-link">
+        <i class="icon icon-login icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-in">
+  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+  <polyline points="10 17 15 12 10 7"></polyline>
+  <line x1="15" y1="12" x2="3" y2="12"></line>
+</svg>
+</i>Sign in
+      </a>
+</div>
+    <button class="btn-toggle menu__toggle js-menu-open"
+      type="button" title="Menu" aria-label="Menu">
+        <span></span>
+        <span></span>
+    </button>
+  </div>
+</header>
+
+
+      <div class="menu js-menu">
+  <div class="menu__header flex content-end">
+    <button class="btn-toggle menu__toggle is-active js-menu-close"
+      type="button" title="Menu" aria-label="Menu">
+        <span></span>
+        <span></span>
+    </button>
+  </div>
+
+  <nav class="menu__navigation">
+    <ul class="nav">
+    <li class="nav-home" 
+      data-label="Home" data-length="4">
+      <a href="../index.html">
+        <span>Home</span>
+      </a>
+    </li>
+    <li class="nav-about" 
+      data-label="About" data-length="5">
+      <a href="../about/index.html">
+        <span>About</span>
+      </a>
+    </li>
+</ul>
+
+      <ul class="nav secondary submenu">
+    <li class="nav-privacy" 
+      data-label="Privacy" data-length="7">
+      <a href="../privacy/index.html">
+        <span>Privacy</span>
+      </a>
+    </li>
+    <li class="nav-terms" 
+      data-label="Terms" data-length="5">
+      <a href="../terms/index.html">
+        <span>Terms</span>
+      </a>
+    </li>
+    <li class="nav-contact" 
+      data-label="Contact" data-length="7">
+      <a href="../contact/index.html">
+        <span>Contact</span>
+      </a>
+    </li>
+    <li class="nav-natural-ui-wip" 
+      data-label="Natural UI (WIP)" data-length="16">
+      <a href="../laws-of-natural-ui/index.html">
+        <span>Natural UI (WIP)</span>
+      </a>
+    </li>
+</ul>
+  </nav>
+
+  <div class="menu__actions flex w-100">
+        <a href="../signin/index.html" data-portal="signin" class="btn signin-link btn--bordered radius m-r">
+          Log in
+        </a>
+        <a href="../signup/index.html" data-portal="signup" class="btn signup-link btn--brand radius">
+          Subscribe
+        </a>
+  </div>
+</div>
+    <main class="main">
+      
+
+  <div class="container wrapper">
+  
+    <div class="post-hero is-post" 
+  data-feature-image="true" data-image-style="resource">
+  
+  <div class="post-hero__content flex flex-col">
+    <h1 class="post-hero__title">Create a &quot;Premium&quot; Metallic Gold Effect in Figma (plus template)</h1>
+   
+
+      <div class="post-info text-acc m-t"> 
+  <ul class="post-info__avatars">
+      <li class="author-avatar has-image">
+        <a href="../author/gareth/index.html" title="Gareth" aria-label="Gareth">
+            <picture class="">
+  <source 
+    data-srcset="../content/images/size/w30/format/webp/2022/11/1585779806641.jpeg.webp 30w,../content/images/size/w100/format/webp/2022/11/1585779806641.jpeg.webp 100w,"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="lazyload"
+    data-srcset="../content/images/size/w30/2022/11/1585779806641.jpeg 30w,../content/images/size/w100/2022/11/1585779806641.jpeg 100w,"
+    srcset="../content/images/size/w30/2022/11/1585779806641.jpeg"
+    data-sizes="auto"
+    data-src="../content/images/size/w100/2022/11/1585779806641.jpeg"
+    src="../content/images/size/w30/2022/11/1585779806641.jpeg"
+    alt="Gareth"
+    
+  >
+</picture>        </a>
+      </li>
+  </ul>
+  <div class="post-info__detail">
+    <span class="post-info__author"><a href="../author/gareth/index.html">Gareth</a></span>
+    <div class="post-info__dr">
+      <time datetime="2022-10-30">Oct 30, 2022</time> 
+      <span class="post-info__readtime">6 min read</span>
+    </div>
+  </div>
+</div>  </div>
+
+    <div class="post-hero__media">
+      <figure class="post-hero__figure">
+        <picture class="">
+  <source 
+    data-srcset="../content/images/size/w300/format/webp/2023/03/gold-effect-figma-template.png.webp 300w,../content/images/size/w600/format/webp/2023/03/gold-effect-figma-template.png.webp 600w,../content/images/size/w1000/format/webp/2023/03/gold-effect-figma-template.png.webp 1000w,../content/images/size/w2000/format/webp/2023/03/gold-effect-figma-template.png.webp 2000w"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="lazyload post-hero__img"
+    data-srcset="../content/images/size/w300/2023/03/gold-effect-figma-template.png 300w,../content/images/size/w600/2023/03/gold-effect-figma-template.png 600w,../content/images/size/w1000/2023/03/gold-effect-figma-template.png 1000w,../content/images/size/w2000/2023/03/gold-effect-figma-template.png 2000w"
+    srcset="../content/images/size/w30/2023/03/gold-effect-figma-template.png"
+    data-sizes="auto"
+    data-src="../content/images/size/w100/2023/03/gold-effect-figma-template.png"
+    src="../content/images/size/w30/2023/03/gold-effect-figma-template.png"
+    alt="Create a &quot;Premium&quot; Metallic Gold Effect in Figma (plus template)"
+    
+  >
+</picture>        
+      </figure>
+    </div>
+
+</div>
+
+    <article class="post tag-paywall-design tag-visual-design content post-access-public">
+      <p><a href="#use-it-today-%E2%80%93-download-the-template"><strong>Jump to the template👇</strong></a></p><p>You know those fancy gold effects you see in app UIs like Robinhood or Tinder?</p><p>Sometimes you'll see it used for mobile game UIs, for in game currencies, achievements, or awards:</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/07b9c960-9036-4ff2-ad44-29cb3097b6a8.png" class="kg-image" alt="Screenshot from Candy Crush Saga showing gold bars and a gold progress bar" loading="lazy" width="972" height="1400" srcset="../content/images/size/w600/2022/10/07b9c960-9036-4ff2-ad44-29cb3097b6a8.png 600w, ../content/images/2022/10/07b9c960-9036-4ff2-ad44-29cb3097b6a8.png 972w" sizes="(min-width: 720px) 720px"><figcaption>Image credit: come on. It's Candy Crush.</figcaption></figure><p>The use of gold as a color association to create feelings of exclusiveness and richness is one as old as time. Just go to any casino. Think that gold lighting and curtains are a mistake? Nope.</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/kvnga-vBWsG91aR_U-unsplash.jpg" class="kg-image" alt="A casino with gold light fixtures and gold moulding on the ceiling" loading="lazy" width="2000" height="1333" srcset="../content/images/size/w600/2022/10/kvnga-vBWsG91aR_U-unsplash.jpg 600w, ../content/images/size/w1000/2022/10/kvnga-vBWsG91aR_U-unsplash.jpg 1000w, ../content/images/size/w1600/2022/10/kvnga-vBWsG91aR_U-unsplash.jpg 1600w, ../content/images/size/w2400/2022/10/kvnga-vBWsG91aR_U-unsplash.jpg 2400w" sizes="(min-width: 720px) 720px"></figure><p>Or how about this credit card from AMEX?</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/NUS000000174_480x304_straight_withname.png.webp" class="kg-image" alt="A gold American Express credit card" loading="lazy" width="480" height="304"><figcaption>Don't pay for credit cards.</figcaption></figure><p>Getting something gold for your money is cashing in (ha) on the age-old color association that <strong>gold is valuable</strong>. Even stuff that just... <em>looks </em>gold. </p><p>That's one of many tactics that credit card companies employ to get people to pay <em>them</em> to use their card<em>.</em></p><p>In the example below, Tinder uses the gold effect to create a premium feel for people paying for their premium offering, Tinder Gold. </p><p>The app will even modify their UI elements after you've purchased Tinder Gold, by placing a gold app icon on your home screen:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/66872661.jpg.webp" class="kg-image" alt="App icon for Tinder Gold" loading="lazy" width="1200" height="900" srcset="../content/images/size/w600/2022/10/66872661.jpg.webp 600w, ../content/images/size/w1000/2022/10/66872661.jpg.webp 1000w, ../content/images/2022/10/66872661.jpg.webp 1200w" sizes="(min-width: 720px) 720px"></figure><p>This is done to create the feeling that you've purchased a special experience, that you're a member of a special "VIP" type group. Your app is gold, therefore, you have gold. You're a gold member.</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/gold-member-bailando.gif" class="kg-image" alt="Goldmember movie" loading="lazy" width="498" height="278"></figure><p><em>ahem</em></p><p>Regardless of the use of color psychology and the endless and important ethical debates that come with design, it's a cool effect and can be useful to know how to use it in your UI designs. </p><p>You can also use it as a foundation to create other metallic treatments. And it's also not super difficult to create in Figma.</p><p>With that said...</p><p><strong>There are two primary styles of gold we'll cover:</strong></p><ol><li>Metallic satin gold</li><li>Polished gold</li></ol><p>And this is what they look like:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/gold-satin-polished-1.jpg" class="kg-image" alt="Comparison of two types of gold finishes: Satin Gold and Polished Gold" loading="lazy" width="1065" height="642" srcset="../content/images/size/w600/2022/10/gold-satin-polished-1.jpg 600w, ../content/images/size/w1000/2022/10/gold-satin-polished-1.jpg 1000w, ../content/images/2022/10/gold-satin-polished-1.jpg 1065w" sizes="(min-width: 720px) 720px"></figure><h2 id="how-to-create-satin-gold-for-premium-offerings">How to Create Satin Gold for Premium Offerings</h2><p>Satin gold has a more luxurious feel to it, which means it's well-suited to premium app or websites offerings that want to give their purchasers a sense of luxuriousness or specialness.</p><p>To create a satin gold effect, first let's create our base shape. To start out, let's use a rounded rectangle with some really nice corner smoothing, because we like to have fun.</p><p>I used a <strong>240px x 240px</strong> rectangle, and applied <strong>64px corner radius</strong> with <strong>100% corner smoothing </strong>to make it extra sassy:</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/create-rectangle.png" class="kg-image" alt="64 pixel corner rounding, with corner smoothing turned all the way up" loading="lazy" width="2000" height="1094" srcset="../content/images/size/w600/2022/10/create-rectangle.png 600w, ../content/images/size/w1000/2022/10/create-rectangle.png 1000w, ../content/images/size/w1600/2022/10/create-rectangle.png 1600w, ../content/images/2022/10/create-rectangle.png 2014w" sizes="(min-width: 720px) 720px"><figcaption>Sassy as heck</figcaption></figure><p>Then, with this shape selected, select the color picker under Fill and pick the Linear gradient option:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/lineargradient.png" class="kg-image" alt="The creation of a linear gradient within the app icon shape" loading="lazy" width="2000" height="1013" srcset="../content/images/size/w600/2022/10/lineargradient.png 600w, ../content/images/size/w1000/2022/10/lineargradient.png 1000w, ../content/images/size/w1600/2022/10/lineargradient.png 1600w, ../content/images/2022/10/lineargradient.png 2220w" sizes="(min-width: 720px) 720px"></figure><p>Now we can start building our gradient. </p><p>For the satin gold effect, we'll create <strong>3 gradient points by clicking in the empty space above the gradient bar:</strong></p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/add-gradient-point.gif" class="kg-image" alt="A 3rd color stop point is added to the gradient, in the center" loading="lazy" width="600" height="298" srcset="../content/images/2022/10/add-gradient-point.gif 600w"></figure><p>And <strong>set them all to 100% opacity. </strong></p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/3-gradient-points.png" class="kg-image" alt="The opacity for all color stop points on the gradient is set to 100%" loading="lazy" width="2000" height="1022" srcset="../content/images/size/w600/2022/10/3-gradient-points.png 600w, ../content/images/size/w1000/2022/10/3-gradient-points.png 1000w, ../content/images/size/w1600/2022/10/3-gradient-points.png 1600w, ../content/images/2022/10/3-gradient-points.png 2054w" sizes="(min-width: 720px) 720px"></figure><p>Next, since we want a luxurious gold feel, we'll select some slightly desaturated gold colors for both ends, and a lighter version or <em>tint </em>of that for the center. I'm using <strong>#EECB84 for the ends </strong>and<strong> #FFE5AE for the center:</strong></p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/gold.png" class="kg-image" alt="All 3 stop points are changed to gold, dark on the left, light in the middle, and dark on the right" loading="lazy" width="2000" height="970" srcset="../content/images/size/w600/2022/10/gold.png 600w, ../content/images/size/w1000/2022/10/gold.png 1000w, ../content/images/size/w1600/2022/10/gold.png 1600w, ../content/images/2022/10/gold.png 2012w" sizes="(min-width: 720px) 720px"><figcaption>Ooh, so luxurious.</figcaption></figure><p>Finally, we'll set the gradient angle, <strong>keeping the handles aligned to the outer bounds of the shape</strong>:</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/set-gradient-angle.gif" class="kg-image" alt="The angle of the gradient is changed to 45 degrees" loading="lazy" width="600" height="291" srcset="../content/images/2022/10/set-gradient-angle.gif 600w"><figcaption>Annnd shift.</figcaption></figure><p>Wa la! Satin gold.</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/satin-gold-1.jpg" class="kg-image" alt="Finished satin old app icon with the label &quot;let's eat tiramisu&quot; next to it" loading="lazy" width="1065" height="470" srcset="../content/images/size/w600/2022/10/satin-gold-1.jpg 600w, ../content/images/size/w1000/2022/10/satin-gold-1.jpg 1000w, ../content/images/2022/10/satin-gold-1.jpg 1065w" sizes="(min-width: 720px) 720px"><figcaption>Buy me</figcaption></figure><p>Next, let's tackle the shinier cousin: polished gold.</p><h2 id="how-to-create-polished-gold-for-game-like-elements">How to Create Polished Gold for Game-Like Elements</h2><p>Polished gold is shiny, fun, and rich, which means it works well applied to components or visual elements like achievements, badges, currency, and anything else you might get as a reward in an app or game.</p><p>To create a polished gold effect, we'll start with our base shape again, and select linear gradient.</p><p><strong>This time, we'll create 4 gradient points:</strong></p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/linear-gradient-with-4-points.png" class="kg-image" alt="4 gradient color stop points are created" loading="lazy" width="1998" height="1108" srcset="../content/images/size/w600/2022/10/linear-gradient-with-4-points.png 600w, ../content/images/size/w1000/2022/10/linear-gradient-with-4-points.png 1000w, ../content/images/size/w1600/2022/10/linear-gradient-with-4-points.png 1600w, ../content/images/2022/10/linear-gradient-with-4-points.png 1998w" sizes="(min-width: 720px) 720px"><figcaption>One extra point will make all the difference.</figcaption></figure><p>For the polished gold effect, we want to use a more rich and saturated color palette. This gold should almost feel "juicy" by comparison to the satin gold. Less luxurious, more stimulating.</p><p>For the gradient colors, left to right, I'm using #FDD792, #FEF9EB, #F9C475, and #D68E43.</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/polished-gold-gradient-colors.png" class="kg-image" alt="All 4 gradient color stop points are changed to gold, darker on the outside and lighter in the middle, one of them is almost white" loading="lazy" width="1978" height="1000" srcset="../content/images/size/w600/2022/10/polished-gold-gradient-colors.png 600w, ../content/images/size/w1000/2022/10/polished-gold-gradient-colors.png 1000w, ../content/images/size/w1600/2022/10/polished-gold-gradient-colors.png 1600w, ../content/images/2022/10/polished-gold-gradient-colors.png 1978w" sizes="(min-width: 720px) 720px"><figcaption>Nice 'n juicy.</figcaption></figure><p>Then, just like the last one, we'll rotate our gradient angle.</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/rotate-polished-gradient.gif" class="kg-image" alt="The angle of the gradient is set to 45 degrees" loading="lazy" width="600" height="298" srcset="../content/images/2022/10/rotate-polished-gradient.gif 600w"></figure><p>We're still pretty satin-y. And we don't want any religious groups knocking on our doors, so we'll take a step back from satin-ism and polish our gold.</p><p><strong>To do this, we'll change the distribution of the color points.</strong></p><p>Take those two center color handles and move them so close to each other that they no longer fade, but occur immediately after each other:</p><figure class="kg-card kg-image-card"><img src="../content/images/2022/10/polish-that-gold.gif" class="kg-image" alt="The color stop points are brought closer together" loading="lazy" width="600" height="298" srcset="../content/images/2022/10/polish-that-gold.gif 600w"></figure><p>And there we go! Like true alchemists, we've made polished gold:</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/polished-gold.jpg" class="kg-image" alt="A finished polished gold app icon with the text &quot;sho shiny!&quot; next to it, and some gold bars for comedic effect" loading="lazy" width="1065" height="470" srcset="../content/images/size/w600/2022/10/polished-gold.jpg 600w, ../content/images/size/w1000/2022/10/polished-gold.jpg 1000w, ../content/images/2022/10/polished-gold.jpg 1065w" sizes="(min-width: 720px) 720px"><figcaption>Internet.</figcaption></figure><p>The real magic of these treatments comes out when you start to combine them. For example, if we combine satin and polished gold to create an alternate version of the logo for Tinder Gold, we get some interesting results:</p><figure class="kg-card kg-image-card kg-card-hascaption"><img src="../content/images/2022/10/combined-ooh-ahh.jpg" class="kg-image" alt="A combination of polished and satin gold shows contrast" loading="lazy" width="1065" height="642" srcset="../content/images/size/w600/2022/10/combined-ooh-ahh.jpg 600w, ../content/images/size/w1000/2022/10/combined-ooh-ahh.jpg 1000w, ../content/images/2022/10/combined-ooh-ahh.jpg 1065w" sizes="(min-width: 720px) 720px"><figcaption>Cool looking, but low contrast — there's a reason the real logo is gold on white. Animation could help.</figcaption></figure><p>It's fun to experiment with different material treatments, but they should be used carefully and sparingly if at all. </p><p>Not all brands reserve space for gold or metallic treatments in the first place. And used in the wrong context or overused, it's <em>very</em> easy to create something gaudy and garish that actually doesn't benefit your brand or product.</p><p>So if you've made it to the end of this, thanks for joining me. While if I were you, I wouldn't go off and start making everything gold, learning <em>how</em> to create high quality metallic gradients in Figma is a useful tool to have in your back pocket as a UI designer. </p><p>I've used it more than once in my career, and so you may too.</p><p>As always please let me know if I missed something, or you have any feedback on this article. I want to make this the most practical and useful resource for anyone looking to improve their UI design skillset.</p><p>Additionally, if there's anything you'd like to know how to create in Figma, send it to me in an email and I'd be happy to make a tutorial.</p><p>Happy designing!</p><h2 id="use-it-today-%E2%80%93-download-the-template">Use it today – download the template</h2><div class="kg-card kg-product-card"><div class="kg-product-card-container"><img src="../content/images/2023/03/gold-figma-4.png" width="1600" height="960" srcset="../content/images/size/w600/2023/03/gold-figma-4.png 600w, ../content/images/size/w1000/2023/03/gold-figma-4.png 1000w, ../content/images/2023/03/gold-figma-4.png 1600w" sizes="(min-width: 720px) 720px" class="kg-product-card-image" loading="lazy"><div class="kg-product-card-title-container"><h4 class="kg-product-card-title">Use it now! Get the Golden UI Elements Template ($5)</h4></div><div class="kg-product-card-description"><p>Includes everything you see in this post so you can deconstruct it or use it now.</p></div><a href="https://motivated-trailblazer-2610.ck.page/products/gold-elements-template?ref=theuilab.co" class="kg-product-card-button kg-product-card-btn-accent" target="_blank" rel="noopener noreferrer"><span>Go to Download</span></a></div></div>
+    </article>
+
+          <div class="post-tags content-width">
+        <a href="../tag/paywall-design/index.html" style="--color-accent:#1b9834;">Paywall Design</a>
+        <a href="../tag/visual-design/index.html" >Visual Design</a>
+    </div>
+
+        <div class="social-share content-width m-b-xl">
+  <a class="social-share__item twitter js-share" target="_blank"
+      href="https://twitter.com/share?text=Create%20a%20%22Premium%22%20Metallic%20Gold%20Effect%20in%20Figma%20(plus%20template)&amp;url=https://www.theuilab.co/how-to-make-gold-ui-elements/"
+      title="Share on Twitter" aria-label="Share on Twitter">
+    <i class="icon icon-twitter icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+</i>    <span>Tweet</span>
+  </a>
+  <a class="social-share__item facebook js-share" target="_blank"
+      href="https://www.facebook.com/sharer.php?u=https://www.theuilab.co/how-to-make-gold-ui-elements/"
+      title="Share on Facebook" aria-label="Share on Facebook">
+    <i class="icon icon-facebook icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-facebook" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3" />
+</svg>
+
+
+
+</i>    <span>Share</span>
+  </a>
+  <a class="social-share__item linkedin js-share" target="_blank"
+      href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://www.theuilab.co/how-to-make-gold-ui-elements/&amp;title=Create%20a%20%22Premium%22%20Metallic%20Gold%20Effect%20in%20Figma%20(plus%20template)&amp;summary=Create%20a%20%22Premium%22%20Metallic%20Gold%20Effect%20in%20Figma%20(plus%20template)"
+      title="Share on Linkedin" aria-label="Share on Linkedin">
+    <i class="icon icon-linkedin icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-linkedin">
+  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+  <rect x="2" y="9" width="4" height="12"></rect>
+  <circle cx="4" cy="4" r="2"></circle>
+</svg>
+</i>    <span>Share</span>
+  </a>
+  <a class="social-share__item mail"
+      href="mailto:?subject=Create%20a%20%22Premium%22%20Metallic%20Gold%20Effect%20in%20Figma%20(plus%20template)&body=https://www.theuilab.co/how-to-make-gold-ui-elements/&nbsp;Create%20a%20%22Premium%22%20Metallic%20Gold%20Effect%20in%20Figma%20(plus%20template)"
+      title="Share by email" aria-label="Share by email">
+    <i class="icon icon-mail icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mail" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <rect x="3" y="5" width="18" height="14" rx="2" />
+  <polyline points="3 7 12 13 21 7" />
+</svg>
+</i>    <span>Email</span>
+  </a>
+  <button class="copy-link copy js-copy-link" data-url="https://www.theuilab.co/how-to-make-gold-ui-elements/"
+      title="Copy to clipboard" data-label="Copied!" aria-label="Copy to clipboard">
+    <i class="icon icon-copy icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <rect x="8" y="8" width="12" height="12" rx="2" />
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2" />
+</svg>
+</i>    <span>Copy</span>
+  </button>
+</div>
+
+
+      <div class="flex flex-wrap gap-lg m-b-lg">
+        
+              <div class="related-posts radius-double p-lg flex-1 self-align-start">
+        <span class="section-title sm m-b uppercase">Read next</span>
+        <div class="post-list m-b-sm">
+            <a class="post-list-item" href="../design-an-effective-paywall/index.html">
+              <h3 class="post-list-item__title">Design an effective paywall</h3>
+              <i class="icon icon-chevron-right">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <polyline points="9 6 15 12 9 18"></polyline>
+</svg>
+</i>            </a>
+        </div>
+      </div>
+      </div>
+  </div>
+
+
+
+    </main>
+
+          <section class="container wrapper section cta m-b-0 is-post" >
+      <div class="cta__inner radius-double is-rel w-100 p-t-lg p-b-lg has-img">
+        <div class="cta__content flex flex-col is-rel z-index-1">
+          <h2 class="cta__title">UI design expertise <span>on tap<span></h2>
+          <p id="cta-input-label" class="cta__description opacity-075">Become a better designer in 10 minutes a day. Professional, bite-size design expertise delivered to your inbox.</p>
+          
+              <form class="subscribe-form" 
+  data-members-form="signup" data-style="inline-joined">
+  <input data-members-email class="" 
+    type="email" autocomplete="email" placeholder="Your email address" 
+    aria-labelledby="cta-input-label" required> 
+  <button class="btn btn--brand btn--gradient uppercase" type="submit">
+    <span>Subscribe</span>
+  </button>
+  <div class="msg-success">Great! Check your inbox and click the link.</div>
+  <div class="msg-error">Sorry, something went wrong. Please try again.</div>
+</form>        </div>
+        
+          <figure class="cta__media">
+            <picture class="">
+  <source 
+    data-srcset="../content/images/size/w300/format/webp/2023/03/Frame-41.png.webp 300w,../content/images/size/w600/format/webp/2023/03/Frame-41.png.webp 600w,../content/images/size/w1000/format/webp/2023/03/Frame-41.png.webp 1000w,../content/images/size/w2000/format/webp/2023/03/Frame-41.png.webp 2000w"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="lazyload cta__img"
+    data-srcset="../content/images/size/w300/2023/03/Frame-41.png 300w,../content/images/size/w600/2023/03/Frame-41.png 600w,../content/images/size/w1000/2023/03/Frame-41.png 1000w,../content/images/size/w2000/2023/03/Frame-41.png 2000w"
+    srcset="../content/images/size/w30/2023/03/Frame-41.png"
+    data-sizes="auto"
+    data-src="../content/images/size/w100/2023/03/Frame-41.png"
+    src="../content/images/size/w30/2023/03/Frame-41.png"
+    alt="The UI Lab"
+    
+  >
+</picture>          </figure>
+      </div>
+    </section>
+      
+      <footer class="footer">
+  <div class="container wrapper">
+    <div class="row m-b">
+      <div class="col-xs-12 col-md-4">
+        <div class="footer__brand flex items-center">
+            <picture class="">
+  <source 
+    data-srcset="../content/images/size/w300/format/webp/2023/03/uilab-logo.svg.webp 300w,"
+    data-sizes="auto"
+    type="image/webp"
+  >
+  <img class="footer__logo m-r lazyload"
+    data-srcset="../content/images/2023/03/uilab-logo.svg 300w,"
+    srcset="../content/images/2023/03/uilab-logo.svg"
+    data-sizes="auto"
+    data-src="../content/images/2023/03/uilab-logo.svg"
+    src="../content/images/2023/03/uilab-logo.svg"
+    alt="The UI Lab"
+    
+  >
+</picture>        </div>
+
+        <div class="footer__description" id="footer-input-label">
+          Quick tutorials for UI design mastery.
+        </div>
+
+              <form class="subscribe-form radius-rounded m-b" 
+  data-members-form="subscribe" data-style="inline-joined">
+  <input data-members-email class="w-100 radius-rounded" 
+    type="email" autocomplete="email" placeholder="Your email address" 
+    aria-labelledby="footer-input-label" required> 
+  <button class="btn btn--primary radius-rounded" type="submit">
+    <span>Subscribe</span>
+  </button>
+  <div class="msg-success">Great! Check your inbox and click the link.</div>
+  <div class="msg-error">Sorry, something went wrong. Please try again.</div>
+</form>      </div>
+
+      <div class="col-xs-12 col-md-4 m-b footer-nav">
+        <span class="fw-700 m-b-sm display-block text-acc">Navigation</span>
+        <div class="grid col-2">
+          <ul class="nav">
+    <li class="nav-home" 
+      data-label="Home" data-length="4">
+      <a href="../index.html">
+        <span>Home</span>
+      </a>
+    </li>
+    <li class="nav-about" 
+      data-label="About" data-length="5">
+      <a href="../about/index.html">
+        <span>About</span>
+      </a>
+    </li>
+</ul>
+
+            <ul class="nav secondary submenu">
+    <li class="nav-privacy" 
+      data-label="Privacy" data-length="7">
+      <a href="../privacy/index.html">
+        <span>Privacy</span>
+      </a>
+    </li>
+    <li class="nav-terms" 
+      data-label="Terms" data-length="5">
+      <a href="../terms/index.html">
+        <span>Terms</span>
+      </a>
+    </li>
+    <li class="nav-contact" 
+      data-label="Contact" data-length="7">
+      <a href="../contact/index.html">
+        <span>Contact</span>
+      </a>
+    </li>
+    <li class="nav-natural-ui-wip" 
+      data-label="Natural UI (WIP)" data-length="16">
+      <a href="../laws-of-natural-ui/index.html">
+        <span>Natural UI (WIP)</span>
+      </a>
+    </li>
+</ul>
+        </div>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-2 m-b">
+              <span class="fw-700 m-b-sm display-block text-acc">Resources</span>
+              <ul class="nav">
+                  <li><a href="../tag/accessibility/index.html">Accessibility</a></li>
+                  <li><a href="../tag/color/index.html">Color</a></li>
+                  <li><a href="../tag/paywall-design/index.html">Paywall Design</a></li>
+                  <li><a href="../tag/visual-design/index.html">Visual Design</a></li>
+                  <li><a href="../tag/figma/index.html">Figma</a></li>
+              </ul>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-2 m-b">
+        <span class="fw-700 m-b-sm display-block text-acc">Social</span>
+        <div class="social-links flex flex-col">
+          
+
+<a href="../rss/index.rss" class="rss" aria-label="RSS"><i class="icon icon-rss icon--sm">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rss" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <circle cx="5" cy="19" r="1" />
+  <path d="M4 4a16 16 0 0 1 16 16" />
+  <path d="M4 11a9 9 0 0 1 9 9" />
+</svg>
+
+
+
+</i><span>RSS</span></a>
+
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <div class="footer__copy">
+        <span>&copy;2023&nbsp;<a href="../index.html">The UI Lab</a>.</span>
+        <span>Published with&nbsp;<a href="https://ghost.org">Ghost</a>&nbsp;&&nbsp;<a href="https://bironthemes.com/themes/rinne-ghost/">Rinne</a>.</span>
+      </div>
+
+      <div class="color-scheme flex flex-cc radius-half">
+  <div class="color-scheme-symbol">
+    <span class="accent-bg"></span>
+  </div>
+  <select class="color-scheme-select radius-half js-color-scheme-select" aria-label="Change color scheme">
+    <option value="system" selected>System</option>
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+  <i class="icon icon-select">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-select" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M17 8.517L12 3 7 8.517M7 15.48l5 5.517 5-5.517"></path>
+</svg>
+
+
+
+</i></div>    </div>
+
+  </div>
+</footer>
+
+    <dialog class="notification">
+  <i class="icon icon-success notification-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M9 12l2 2l4 -4" />
+</svg>
+
+
+
+</i>  <i class="icon icon-error notification-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alert-octagon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M8.7 3h6.6c.3 0 .5 .1 .7 .3l4.7 4.7c.2 .2 .3 .4 .3 .7v6.6c0 .3 -.1 .5 -.3 .7l-4.7 4.7c-.2 .2 -.4 .3 -.7 .3h-6.6c-.3 0 -.5 -.1 -.7 -.3l-4.7 -4.7c-.2 -.2 -.3 -.4 -.3 -.7v-6.6c0 -.3 .1 -.5 .3 -.7l4.7 -4.7c.2 -.2 .4 -.3 .7 -.3z" />
+  <line x1="12" y1="8" x2="12" y2="12" />
+  <line x1="12" y1="16" x2="12.01" y2="16" />
+</svg>
+
+
+
+</i>  <i class="icon icon-warning notification-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alert-triangle" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M12 9v2m0 4v.01" />
+  <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75" />
+</svg>
+
+
+
+</i>  <p class="notification-msg signup-success">Great! You’ve successfully signed up.</p> 
+  <p class="notification-msg signin-success">Welcome back! You&#x27;ve successfully signed in.</p> 
+  <p class="notification-msg subscribe-success">You&#x27;ve successfully subscribed to The UI Lab.</p> 
+  <p class="notification-msg link-expired">Your link has expired.</p> 
+  <p class="notification-msg checkout-success">Success! Check your email for magic link to sign-in.</p> 
+  <p class="notification-msg billing-success">Success! Your billing info has been updated.</p> 
+  <p class="notification-msg billing-cancel">Your billing was not updated.</p> 
+  <button class="notification-close js-notification-close" aria-label="Close" onclick="closeNotification(event.currentTarget.parentNode);">
+    <i class="icon icon-x">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+</svg>
+</i>  </button>
+</dialog>
+
+      
+    
+
+    
+
+      <script>
+    // Copy button
+    const copyBtn = document.querySelector('.js-copy-link');
+    if (copyBtn) {
+      copyBtn.onclick = function(event) {
+        copyToClipboard(event.currentTarget, event.currentTarget.getAttribute('data-url'));
+      }
+    }
+    
+    /** 
+    * Copy to clipboard
+    * @src - source element
+    * @str - string to copy
+    */ 
+    const copyToClipboard = function(src, str) {
+      const el = document.createElement('textarea');
+      el.value = str;
+      el.setAttribute('readonly', '');
+      el.style.position = 'absolute';
+      el.style.left = '-9999px';
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+
+      src.classList.add('has-tooltip');
+      src.setAttribute('data-label', 'Copied!');
+
+      src.onmouseleave = function() { 
+        src.classList.remove('has-tooltip');
+        setTimeout(function(){
+          src.setAttribute('data-label', '');
+        }, 500); 
+      }
+    };
+  </script>
+
+<script>
+  const navItems = document.querySelectorAll('.header .nav:not(.submenu) li')
+  const allNavItems = document.querySelectorAll('.is-subitem')
+
+  // Remove '-' signs
+  allNavItems.forEach(item => {
+    const itemName = item.querySelector('a span')
+    itemName.innerText = itemName.innerText.slice(1)
+  });
+
+  // Add subitems in place
+  let subMenu, hasItems
+  navItems.forEach((item, index) => {
+    if (item.classList.contains('is-subitem') && !navItems[index - 1].classList.contains('is-subitem')) navItems[index - 1].classList.add('is-mainitem'); 
+    subMenu = item.classList.contains('is-subitem') ? subMenu : document.createElement('ul');
+    if (item.classList.contains('is-subitem')) { 
+      subMenu.appendChild(item)
+      subMenu.classList.add('nav','submenu')
+    } else { 
+      item.appendChild(subMenu)
+    }
+  });
+</script>
+
+  <script>
+    // Give the parameter a variable name
+    const qsParams = new URLSearchParams(window.location.search);
+    const isAction = qsParams.has('action');
+    const isStripe = qsParams.has('stripe');
+    const success = qsParams.get('success');
+    const action = qsParams.get('action');
+    const stripe = qsParams.get('stripe');
+
+    if (qsParams && isAction) {
+      if (success === "true") {
+        switch (action) {
+          case 'subscribe':
+            openNotification('subscribe-success');
+            break;
+          case 'signup': 
+            openNotification('signup-success');
+            break;
+          case 'signin':
+            openNotification('signin-success');
+            break;
+          default:
+            break;
+        }
+      } else {
+        openNotification('link-expired');
+      }
+    }
+
+    if (qsParams && isStripe) {
+      switch (stripe) {
+        case 'success':
+          openNotification('checkout-success');
+          break;
+        case 'billing-update-success':
+          openNotification('billing-success');
+          break;
+        case 'billing-update-cancel':
+          openNotification('billing-cancel');
+          break;
+        default:
+          break;
+      }
+    }
+
+    /**
+    * Handle Notifications
+    */
+    function openNotification(type) {
+      const notification = document.querySelector('dialog.notification');
+      if (notification) { 
+        notification.setAttribute('data-msg-type', type);
+        notification.show();
+        setTimeout(function(){ closeNotification(notification); }, 3000);
+      }
+    }
+    
+    /**
+    * Clean URI
+    */
+    function clearURI() {
+      window.history.replaceState({}, '', `${window.location.pathname}`);
+    }
+
+    function closeNotification(notification) {
+      notification.close();
+      clearURI();
+      setTimeout(function(){ notification.removeAttribute('data-msg-type') }, 500);
+    }
+  </script>
+
+
+    
+  </body>
+</html>
